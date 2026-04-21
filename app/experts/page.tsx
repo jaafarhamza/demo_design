@@ -283,7 +283,7 @@ export default function ExpertsPage({
   locale?: Locale;
 }) {
   const copy = expertsContent[locale];
-  const [activeFilter, setActiveFilter] = useState(copy.filters[0]);
+  const [activeFilter, setActiveFilter] = useState<string>(copy.filters[0]);
 
   const filteredExperts = useMemo(() => {
     if (activeFilter === copy.filters[0]) {
