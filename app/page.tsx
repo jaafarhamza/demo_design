@@ -1,1112 +1,859 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const impactStats = [
+const trustItems = [
+  "Video HD orientee terrain",
+  "Experts INDH disponibles",
+  "Suivi de progression continu",
+];
+
+const keyStats = [
+  { value: "120+", label: "modules guides" },
+  { value: "35", label: "experts mobilises" },
+  { value: "24/7", label: "acces plateforme" },
+];
+
+const topicChips = [
+  "Montage de projet",
+  "Business plan",
+  "Financement INDH",
+  "Marketing local",
+];
+
+const formations = [
   {
-    value: "4",
-    label: "piliers reunis",
-    detail: "formation, projet, experts, suivi",
+    title: "Creer un projet INDH de A a Z",
+    level: "Debutant",
+    duration: "6h 20",
+    format: "Video + atelier",
+    image:
+      "https://images.pexels.com/photos/8134161/pexels-photo-8134161.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    description:
+      "Apprenez a structurer votre idee, valider vos priorites et preparer un dossier convaincant.",
+    badge: "Nouveau",
+    learners: "1 820 inscrits",
   },
   {
-    value: "FR / AR",
-    label: "experience bilingue",
-    detail: "pensée pour le contexte marocain",
+    title: "Business plan pratique pour cooperatives",
+    level: "Intermediaire",
+    duration: "4h 45",
+    format: "Cas reels",
+    image:
+      "https://images.pexels.com/photos/8284732/pexels-photo-8284732.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    description:
+      "Modele complet avec tableaux financiers simples, hypotheses claires et feuille de route d'execution.",
+    badge: "Populaire",
+    learners: "1 260 inscrits",
   },
   {
-    value: "24/7",
-    label: "acces continu",
-    detail: "desktop, tablette et mobile",
+    title: "Financement et subventions INDH",
+    level: "Intermediaire",
+    duration: "3h 30",
+    format: "Guides + templates",
+    image:
+      "https://images.pexels.com/photos/15141500/pexels-photo-15141500.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    description:
+      "Comprendre les mecanismes d'appui, les criteres d'eligibilite et la preparation des pieces requises.",
+    badge: "Essentiel",
+    learners: "2 100 inscrits",
+  },
+  {
+    title: "Marketing local et vente digitale",
+    level: "Debutant",
+    duration: "5h 10",
+    format: "Video + quiz",
+    image:
+      "https://images.pexels.com/photos/7693683/pexels-photo-7693683.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    description:
+      "Construisez une strategie simple pour attirer des clients, fideliser et vendre de facon durable.",
+    badge: "Tendance",
+    learners: "980 inscrits",
+  },
+  {
+    title: "Gestion de projet et suivi des indicateurs",
+    level: "Avance",
+    duration: "7h 00",
+    format: "Masterclass",
+    image:
+      "https://images.pexels.com/photos/7433900/pexels-photo-7433900.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    description:
+      "Pilotez vos activites avec des KPIs utiles, un calendrier realiste et un suivi hebdomadaire efficace.",
+    badge: "Certifiant",
+    learners: "740 inscrits",
+  },
+  {
+    title: "Leadership et gouvernance associative",
+    level: "Intermediaire",
+    duration: "4h 05",
+    format: "Live + replay",
+    image:
+      "https://images.pexels.com/photos/7693733/pexels-photo-7693733.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    description:
+      "Renforcez l'organisation interne, la prise de decision et la cohesion autour des objectifs communs.",
+    badge: "Live",
+    learners: "1 140 inscrits",
   },
 ];
 
-const audiences = [
-  "Jeunes porteurs de projets",
-  "Cooperatives et associations",
-  "Auto-entrepreneurs",
-];
-
-const missionHighlights = [
+const experts = [
   {
-    title: "Orientation claire",
-    description:
-      "Un parcours plus simple a comprendre des le premier contact.",
+    name: "Yassine El Amrani",
+    role: "Consultant montage de projet",
+    image:
+      "https://images.pexels.com/photos/3867849/pexels-photo-3867849.jpeg?auto=compress&cs=tinysrgb&w=600",
+    region: "Casablanca-Settat",
+    rating: "4.9",
+    projects: "126 projets accompagnes",
+    availability: "Disponible cette semaine",
   },
   {
-    title: "Accompagnement humain",
-    description:
-      "Experts, mentorat et rendez-vous dans un meme espace digital.",
+    name: "Salma Idrissi",
+    role: "Experte financement INDH",
+    image:
+      "https://images.pexels.com/photos/7652054/pexels-photo-7652054.jpeg?auto=compress&cs=tinysrgb&w=600",
+    region: "Rabat-Sale-Kenitra",
+    rating: "4.8",
+    projects: "98 projets accompagnes",
+    availability: "Disponible en visio",
   },
   {
-    title: "Impact visible",
-    description:
-      "Des outils de suivi qui rendent la progression plus lisible.",
-  },
-];
-
-const journeySteps = [
-  {
-    step: "01",
-    label: "Formation",
-    title: "Se former avec des contenus courts et utiles",
-    description:
-      "L'utilisateur entre dans le parcours avec des modules simples, pratiques et accessibles.",
+    name: "Mehdi Ait Lahcen",
+    role: "Coach business plan",
+    image:
+      "https://images.pexels.com/photos/5265333/pexels-photo-5265333.jpeg?auto=compress&cs=tinysrgb&w=600",
+    region: "Marrakech-Safi",
+    rating: "4.7",
+    projects: "84 projets accompagnes",
+    availability: "Prochain creneau: 48h",
   },
   {
-    step: "02",
-    label: "Projet",
-    title: "Construire son projet avec une trame claire",
-    description:
-      "La plateforme aide a structurer l'idee, les besoins et les premiers livrables sans se disperser.",
+    name: "Sara Benjelloun",
+    role: "Mentor marketing digital",
+    image:
+      "https://images.pexels.com/photos/9242832/pexels-photo-9242832.jpeg?auto=compress&cs=tinysrgb&w=600",
+    region: "Fes-Meknes",
+    rating: "4.9",
+    projects: "112 projets accompagnes",
+    availability: "Disponible cette semaine",
   },
   {
-    step: "03",
-    label: "Experts",
-    title: "Recevoir un accompagnement au bon moment",
-    description:
-      "Questions, mentorat et rendez-vous experts restent relies au meme espace de travail.",
+    name: "Omar Chraibi",
+    role: "Expert suivi et KPI",
+    image:
+      "https://images.pexels.com/photos/8134161/pexels-photo-8134161.jpeg?auto=compress&cs=tinysrgb&w=600",
+    region: "Tanger-Tetouan-Al Hoceima",
+    rating: "4.8",
+    projects: "91 projets accompagnes",
+    availability: "Disponible en presentiel",
   },
   {
-    step: "04",
-    label: "Suivi",
-    title: "Suivre la progression et les prochaines actions",
-    description:
-      "Chaque etape laisse une trace lisible pour savoir ou l'on en est et quoi faire ensuite.",
-  },
-];
-
-const featureModules = [
-  {
-    label: "Formations",
-    title: "Des contenus courts pour apprendre vite",
-    description:
-      "Modules, parcours et ressources pour comprendre et progresser sans surcharge.",
+    name: "Nora Boussouf",
+    role: "Formatrice ESS cooperative",
+    image:
+      "https://images.pexels.com/photos/8284732/pexels-photo-8284732.jpeg?auto=compress&cs=tinysrgb&w=600",
+    region: "Souss-Massa",
+    rating: "4.7",
+    projects: "77 projets accompagnes",
+    availability: "Prochain creneau: 72h",
   },
   {
-    label: "Experts",
-    title: "Un lien direct avec l'accompagnement",
-    description:
-      "Mentorat, questions et rendez-vous relies au parcours utilisateur.",
+    name: "Karim Boukili",
+    role: "Consultant gouvernance",
+    image:
+      "https://images.pexels.com/photos/15141500/pexels-photo-15141500.jpeg?auto=compress&cs=tinysrgb&w=600",
+    region: "Oriental",
+    rating: "4.8",
+    projects: "88 projets accompagnes",
+    availability: "Disponible cette semaine",
   },
   {
-    label: "Projet",
-    title: "Des outils pour structurer l'idee",
-    description:
-      "Guidage, organisation et premiers livrables dans un meme flux.",
-  },
-  {
-    label: "Dashboard",
-    title: "Une vue claire sur l'avancement",
-    description:
-      "Progression, priorites et prochaines actions visibles en un coup d'oeil.",
-  },
-  {
-    label: "Communaute",
-    title: "Un espace plus vivant et collaboratif",
-    description:
-      "Partage d'experiences, entraide et dynamique collective autour des projets.",
+    name: "Hajar El Fassi",
+    role: "Coach leadership terrain",
+    image:
+      "https://images.pexels.com/photos/7693683/pexels-photo-7693683.jpeg?auto=compress&cs=tinysrgb&w=600",
+    region: "Draa-Tafilalet",
+    rating: "4.9",
+    projects: "69 projets accompagnes",
+    availability: "Disponible en visio",
   },
 ];
 
-const targetUsers = [
+const communityGroups = [
   {
-    step: "01",
-    label: "Jeunes entrepreneurs",
-    title: "Un point d'entree plus simple pour lancer une idee",
+    name: "Groupe Ideation & Lancement",
+    image:
+      "https://images.pexels.com/photos/7433900/pexels-photo-7433900.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    members: "420 membres",
+    focus: "Ideation",
+    rhythm: "2 sessions / semaine",
     description:
-      "Des contenus utiles, un cadre clair et un accompagnement plus rassurant pour demarrer.",
+      "Echangez avec des porteurs de projets pour transformer une idee en plan d'action concret.",
   },
   {
-    step: "02",
-    label: "Cooperatives",
-    title: "Des outils pour structurer une dynamique collective",
+    name: "Business Plan Collaboratif",
+    image:
+      "https://images.pexels.com/photos/7693733/pexels-photo-7693733.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    members: "365 membres",
+    focus: "Business plan",
+    rhythm: "Atelier hebdomadaire",
     description:
-      "La plateforme aide a organiser les besoins, les etapes et les ressources autour du projet.",
+      "Co-construction de business plans avec retours des mentors et exemples terrain INDH.",
   },
   {
-    step: "03",
-    label: "Associations",
-    title: "Un espace pour orienter et suivre les initiatives",
+    name: "Financement & Subventions",
+    image:
+      "https://images.pexels.com/photos/3867849/pexels-photo-3867849.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    members: "510 membres",
+    focus: "Financement",
+    rhythm: "Live Q&A chaque semaine",
     description:
-      "L'information, les experts et le suivi restent plus faciles a mobiliser dans un meme environnement.",
+      "Partage des opportunites, dossiers type et strategies de preparation pour le financement.",
   },
   {
-    step: "04",
-    label: "Auto-entrepreneurs",
-    title: "Un accompagnement agile pour avancer plus vite",
+    name: "Marketing Local & Vente",
+    image:
+      "https://images.pexels.com/photos/7652054/pexels-photo-7652054.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    members: "298 membres",
+    focus: "Marketing",
+    rhythm: "3 ateliers / mois",
     description:
-      "Une experience legere, mobile et pratique pour apprendre, clarifier et passer a l'action.",
-  },
-];
-
-const supportPillars = [
-  {
-    label: "Learning",
-    title: "Des modules pour comprendre avant d'agir",
-    description:
-      "Cours, parcours et ressources pour apprendre avec un rythme simple et progressif.",
-    accent: "bg-brand/10 text-brand-emphasis",
+      "Retours d'experience sur l'acquisition client locale et la communication digitale simple.",
   },
   {
-    label: "Project Support",
-    title: "Des outils pour transformer une idee en plan d'action",
+    name: "Suivi KPI & Pilotage",
+    image:
+      "https://images.pexels.com/photos/5265333/pexels-photo-5265333.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    members: "254 membres",
+    focus: "Pilotage",
+    rhythm: "Sprint bi-mensuel",
     description:
-      "Organisation, accompagnement et suivi pour faire avancer le projet sans perdre le fil.",
-    accent: "bg-accent/12 text-accent-contrast dark:text-accent",
-  },
-];
-
-const impactStories = [
-  {
-    label: "Beneficiaire",
-    title: "De l'idee a un projet mieux structure",
-    description:
-      "Une experience qui aide a comprendre les etapes, suivre l'avancement et mieux preparer les prochaines decisions.",
+      "Apprenez a suivre vos indicateurs et a ajuster vos priorites avec une communaute active.",
   },
   {
-    label: "Territoire",
-    title: "Un accompagnement plus visible sur le terrain",
+    name: "Mentorat Cooperatives",
+    image:
+      "https://images.pexels.com/photos/9242832/pexels-photo-9242832.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    members: "332 membres",
+    focus: "Gouvernance",
+    rhythm: "Forum quotidien",
     description:
-      "Des outils partages pour rendre l'appui plus lisible entre acteurs, experts et beneficiaires.",
-  },
-  {
-    label: "Impact",
-    title: "Plus de clarte, plus de confiance, plus d'action",
-    description:
-      "La plateforme donne des reperes concrets qui renforcent la confiance dans le parcours.",
+      "Un espace d'entraide entre cooperatives pour renforcer organisation, leadership et impact.",
   },
 ];
 
-const finalActions = [
+const communityActivities = [
+  "Live: Questions-reponses financement INDH (ce soir 18h00)",
+  "Nouveau fil: Check-list dossier de subvention 2026",
+  "Atelier pratique: Pricing et marge pour auto-entrepreneurs",
+  "Session mentorat: Gouvernance associative et repartition des roles",
+  "Cas reel partage: Projet agricole finance et deploye",
+];
+
+const pilotsByProvince = [
   {
-    title: "Explorer la plateforme",
-    description:
-      "Decouvrir les modules, les parcours et la logique globale de l'experience.",
-    href: "/how-it-works",
-    cta: "Voir le parcours",
+    province: "Rabat-Sale-Kenitra",
+    image:
+      "https://images.pexels.com/photos/8134161/pexels-photo-8134161.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    pilot: "Samira El Mansouri",
+    specialty: "Pilotage formation & execution",
+    activeProjects: "42 projets actifs",
+    completionRate: "88% finalisation",
+    linkedTrack: "Parcours: montage + financement",
+    nextReview: "Revue province: mardi 10h00",
   },
   {
-    title: "Contacter l'equipe",
-    description:
-      "Poser une question, demander un echange ou presenter le besoin de votre structure.",
-    href: "/contact",
-    cta: "Nous contacter",
+    province: "Casablanca-Settat",
+    image:
+      "https://images.pexels.com/photos/8284732/pexels-photo-8284732.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    pilot: "Youssef Berrada",
+    specialty: "Suivi terrain multisectoriel",
+    activeProjects: "57 projets actifs",
+    completionRate: "85% finalisation",
+    linkedTrack: "Parcours: business plan avance",
+    nextReview: "Revue province: jeudi 14h30",
   },
   {
-    title: "Commencer son parcours",
-    description:
-      "Entrer dans une experience claire pour apprendre, structurer et faire avancer un projet.",
-    href: "/trainings",
-    cta: "Commencer",
+    province: "Marrakech-Safi",
+    image:
+      "https://images.pexels.com/photos/15141500/pexels-photo-15141500.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    pilot: "Nadia Belkadi",
+    specialty: "Coaching cooperatives",
+    activeProjects: "38 projets actifs",
+    completionRate: "90% finalisation",
+    linkedTrack: "Parcours: ESS & gouvernance",
+    nextReview: "Revue province: lundi 09h30",
+  },
+  {
+    province: "Fes-Meknes",
+    image:
+      "https://images.pexels.com/photos/7693683/pexels-photo-7693683.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    pilot: "Karim Lahrach",
+    specialty: "Accompagnement financement",
+    activeProjects: "33 projets actifs",
+    completionRate: "84% finalisation",
+    linkedTrack: "Parcours: financement INDH",
+    nextReview: "Revue province: mercredi 16h00",
+  },
+  {
+    province: "Tanger-Tetouan-Al Hoceima",
+    image:
+      "https://images.pexels.com/photos/7433900/pexels-photo-7433900.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    pilot: "Salwa Amrani",
+    specialty: "Pilotage KPI & indicateurs",
+    activeProjects: "29 projets actifs",
+    completionRate: "87% finalisation",
+    linkedTrack: "Parcours: pilotage et reporting",
+    nextReview: "Revue province: vendredi 11h00",
+  },
+  {
+    province: "Souss-Massa",
+    image:
+      "https://images.pexels.com/photos/7693733/pexels-photo-7693733.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    pilot: "Othmane Kabbaj",
+    specialty: "Animation communautaire",
+    activeProjects: "31 projets actifs",
+    completionRate: "82% finalisation",
+    linkedTrack: "Parcours: marketing local",
+    nextReview: "Revue province: jeudi 09h00",
+  },
+  {
+    province: "Oriental",
+    image:
+      "https://images.pexels.com/photos/3867849/pexels-photo-3867849.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    pilot: "Hind Bennani",
+    specialty: "Structuration des dossiers",
+    activeProjects: "24 projets actifs",
+    completionRate: "86% finalisation",
+    linkedTrack: "Parcours: dossier & validation",
+    nextReview: "Revue province: mardi 15h00",
+  },
+  {
+    province: "Draa-Tafilalet",
+    image:
+      "https://images.pexels.com/photos/7652054/pexels-photo-7652054.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    pilot: "Rachid El Idrissi",
+    specialty: "Pilotage zones rurales",
+    activeProjects: "27 projets actifs",
+    completionRate: "83% finalisation",
+    linkedTrack: "Parcours: suivi terrain",
+    nextReview: "Revue province: lundi 13h00",
   },
 ];
 
-const heroImageSrc =
-  "https://cdn.pixabay.com/photo/2020/01/20/11/51/woman-4780153_1280.jpg";
-const missionImagePrimarySrc =
-  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80";
-const missionImageSecondarySrc =
-  "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=900&q=80";
-const journeyImagePrimarySrc =
-  "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1400&q=80";
-const journeyImageSecondarySrc =
-  "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=900&q=80";
-const featuresImagePrimarySrc =
-  "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80";
-const targetUsersImagePrimarySrc =
-  "https://images.unsplash.com/photo-1522204538344-922f76ecc041?auto=format&fit=crop&w=1400&q=80";
-const supportPreviewImagePrimarySrc =
-  "https://images.unsplash.com/photo-1516321165247-4aa89a48be28?auto=format&fit=crop&w=1400&q=80";
-const impactImagePrimarySrc =
-  "https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=1400&q=80";
-const finalCtaImagePrimarySrc =
-  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80";
+const provinceInsights = [
+  { label: "Provinces suivies", value: "8" },
+  { label: "Pilotes actifs", value: "23" },
+  { label: "Projets en cours", value: "281" },
+  { label: "Taux moyen", value: "86%" },
+];
+
+function SearchIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className="h-5 w-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-3.5-3.5" />
+    </svg>
+  );
+}
+
+function ArrowIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className="h-4.5 w-4.5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.9"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h14" />
+      <path d="m13 5 7 7-7 7" />
+    </svg>
+  );
+}
 
 export default function Home() {
   return (
-    <main className="mx-auto flex w-full max-w-360 flex-1 flex-col px-3 pb-16 pt-8 sm:px-4 sm:pt-10 lg:px-6 lg:pb-24">
-      <section className="relative scroll-mt-28 overflow-hidden px-2 py-6 sm:scroll-mt-32 sm:px-3 sm:py-8 lg:px-4 lg:py-10 xl:px-6">
-        <div className="grid gap-10 xl:grid-cols-[1.05fr_0.95fr] xl:items-center">
-          <div className="relative z-10 space-y-7">
-            <div className="space-y-4">
-              <span className="hero-kicker">Plateforme nationale INDH</span>
-              <h1 className="max-w-4xl font-display text-[clamp(2.8rem,7vw,6.4rem)] leading-[0.92] tracking-[-0.055em] text-foreground">
-                Former, orienter et transformer une idee en projet structure.
-              </h1>
-              <p className="max-w-2xl text-[1.03rem] leading-8 text-muted-strong sm:text-[1.12rem]">
-                INDH Digitale centralise la formation, l&apos;accompagnement
-                expert et les outils de suivi dans une experience claire,
-                moderne et accessible pour les porteurs de projets au Maroc.
-              </p>
-            </div>
+    <main className="flex-1">
+      <section className="px-3 pb-12 pt-6 sm:px-4 sm:pb-14 sm:pt-8 ">
+        <div className="mx-auto max-w-full">
+          <div className="relative overflow-hidden ">
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent" />
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              <Link
-                href="/how-it-works"
-                className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand px-6 text-sm font-semibold text-brand-contrast shadow-soft transition-colors hover:bg-brand-700"
-              >
-                Decouvrir le parcours
-              </Link>
-              <Link
-                href="/trainings"
-                className="inline-flex min-h-12 items-center justify-center rounded-full border border-border-strong/55 bg-background/80 px-6 text-sm font-semibold text-foreground transition-colors hover:bg-surface-strong"
-              >
-                Explorer les formations
-              </Link>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-3">
-              {impactStats.map((item) => (
-                <article
-                  key={item.label}
-                  className="rounded-[1.5rem] border border-border/70 bg-background/62 p-4 backdrop-blur-xl"
-                >
-                  <p className="font-display text-2xl text-foreground">
-                    {item.value}
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-muted-strong">
-                    {item.label}
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-muted">
-                    {item.detail}
-                  </p>
-                </article>
-              ))}
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {audiences.map((audience) => (
-                <span
-                  key={audience}
-                  className="inline-flex min-h-11 items-center rounded-full border border-border/70 bg-surface px-4 text-sm text-muted-strong"
-                >
-                  {audience}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div className="relative z-10">
-            <div className="relative mx-auto max-w-full">
-              <div className="pointer-events-none absolute inset-8  " />
-
-              <div className="relative overflow-hidden p-3">
-                <div className="absolute inset-0 " />
-                <div className="relative overflow-hidden rounded-[2rem]">
-                  <Image
-                    unoptimized
-                    src={heroImageSrc}
-                    alt="Entrepreneur working on a laptop in a collaborative workspace"
-                    width="1280"
-                    height="853"
-                    priority
-                    className="h-[27rem] w-full object-cover sm:h-[31rem] lg:h-144"
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(13,24,18,0.12),rgba(13,24,18,0.18)_48%,rgba(13,24,18,0.62))]" />
-
-                  <div className="absolute left-4 top-4 flex flex-wrap gap-2 sm:left-5 sm:top-5">
-                    <span className="inline-flex min-h-10 items-center rounded-full bg-background/82 px-4 text-sm font-semibold text-brand-emphasis shadow-card backdrop-blur-xl">
-                      Formation + mentorat
-                    </span>
-                    <span className="inline-flex min-h-10 items-center rounded-full bg-background/76 px-4 text-sm font-semibold text-foreground shadow-card backdrop-blur-xl">
-                      FR / AR
-                    </span>
-                  </div>
+            <div className="grid gap-4 xl:grid-cols-[1.04fr_0.96fr] xl:items-center xl:gap-6">
+              <div className="relative space-y-7">
+                <div className="inline-flex items-center gap-2  px-4 text-sm font-semibold tracking-[0.14em] text-brand-emphasis uppercase">
+                  Plateforme de formation INDH
                 </div>
-              </div>
 
-              <div className="mt-4 grid gap-3 px-3 sm:grid-cols-2">
-                <article className="rounded-[1.4rem] bg-background/80 p-4 ">
-                  <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                    Suivi
-                  </p>
-                  <div className="mt-3 flex items-end justify-between gap-3">
-                    <p className="font-display text-4xl leading-none text-foreground">
-                      78%
-                    </p>
-                    <p className="text-right text-sm leading-6 text-muted">
-                      progression du parcours
-                    </p>
-                  </div>
-                  <div className="mt-4 h-2.5 rounded-full bg-surface-muted">
-                    <div className="h-2.5 w-[78%] rounded-full bg-gradient-to-r from-brand to-accent" />
-                  </div>
-                </article>
-
-                <article className="rounded-[1.4rem] bg-background/80 p-4">
-                  <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                    Rendez-vous expert
-                  </p>
-                  <p className="mt-3 font-display text-3xl text-foreground">
-                    09:30
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-muted-strong">
-                    Session financement local reservee
-                  </p>
-                </article>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        aria-labelledby="mission-title"
-        className="relative mt-8 scroll-mt-28 px-2 py-8 sm:scroll-mt-32 sm:px-3 sm:py-10 lg:mt-12 lg:px-4 lg:py-14 xl:px-6"
-      >
-        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10 xl:gap-12">
-          <div className="space-y-6 lg:pt-5">
-            <div className="space-y-4 sm:space-y-5">
-              <span className="section-label">
-                Project Mission / Why It Exists
-              </span>
-              <h2
-                id="mission-title"
-                className="max-w-3xl font-display text-[clamp(1.95rem,5vw,4.6rem)] leading-[0.98] tracking-[-0.05em] text-foreground"
-              >
-                Une plateforme pensee pour rendre l&apos;accompagnement plus
-                simple.
-              </h2>
-              <p className="max-w-xl text-[1rem] leading-8 text-muted-strong sm:text-[1.08rem]">
-                INDH Digitale relie orientation, formation et suivi pour que le
-                porteur de projet avance plus vite, avec moins de friction et
-                plus de clarte.
-              </p>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              <article className="panel p-5">
-                <p className="section-label">Le besoin</p>
-                <p className="mt-3 text-base leading-7 text-muted-strong">
-                  Eviter un parcours fragmente entre information, appui et
-                  prise de decision.
-                </p>
-              </article>
-
-              <article className="panel p-5">
-                <p className="section-label">Le role de l&apos;INDH</p>
-                <p className="mt-3 text-base leading-7 text-muted-strong">
-                  Offrir une experience plus visible, plus accessible et mieux
-                  suivie.
-                </p>
-              </article>
-            </div>
-
-            <article className="rounded-[1.8rem] border border-border/70 bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand)_14%,transparent),color-mix(in_oklab,var(--accent)_12%,transparent))] p-5 shadow-card sm:p-6">
-              <p className="section-label">Pourquoi cela compte</p>
-              <p className="mt-3 max-w-xl text-base leading-8 text-muted-strong">
-                Une plateforme utile ne doit pas seulement informer. Elle doit
-                aussi aider a comprendre, se former et avancer.
-              </p>
-            </article>
-          </div>
-
-          <div className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-[1.1fr_0.9fr]">
-              <article className="relative overflow-hidden rounded-[2rem] bg-surface shadow-card">
-                <Image
-                  unoptimized
-                  src={missionImagePrimarySrc}
-                  alt="Equipe en reunion autour d'un ordinateur pour echanger sur un projet"
-                  width="1400"
-                  height="934"
-                  className="h-[19rem] w-full object-cover sm:h-[23rem] lg:h-[27rem]"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(16,27,20,0.08),rgba(16,27,20,0.2)_52%,rgba(16,27,20,0.72))]" />
-                <div className="absolute left-4 top-4 rounded-full bg-background/82 px-4 py-2 text-sm font-semibold text-brand-emphasis shadow-card backdrop-blur-xl">
-                  Contexte terrain
-                </div>
-                <div className="absolute inset-x-4 bottom-4 rounded-[1.4rem] bg-background/84 p-4 shadow-card backdrop-blur-xl">
-                  <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                    Une mission claire
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-muted-strong">
-                    Rapprocher les beneficiaires, les experts et les outils dans
-                    une seule experience.
+                <div className="space-y-4">
+                  <h1 className="max-w-full text-[3rem] leading-[1.05] text-foreground md:text-[5rem] xl:text-[4rem] 2xl:text-[6rem]">
+                    Apprenez vite, structurez votre projet et avancez avec un
+                    encadrement expert.
+                  </h1>
+                  <p className="max-w-3xl text-[1.02rem] leading-7 text-muted-strong sm:text-[1.08rem]">
+                    INDH Digitale propose une experience de formation moderne,
+                    inspiree des meilleures plateformes e-learning, pour guider
+                    les porteurs de projets vers une execution claire, pratique
+                    et mesurable.
                   </p>
                 </div>
-              </article>
 
-              <div className="grid gap-4">
-                <article className="panel flex min-h-[10rem] flex-col justify-between p-5">
-                  <div>
-                    <p className="section-label">Objectif</p>
-                    <h3 className="mt-3 font-display text-[1.55rem] leading-tight text-foreground">
-                      Moins de dispersion, plus d&apos;action.
-                    </h3>
-                  </div>
-                  <p className="mt-4 text-sm leading-6 text-muted">
-                    Un espace unique pour comprendre, apprendre et avancer.
-                  </p>
-                </article>
-
-                <article className="relative overflow-hidden rounded-[1.8rem] bg-surface shadow-card">
-                  <Image
-                    unoptimized
-                    src={missionImageSecondarySrc}
-                    alt="Groupe en atelier de travail et d'accompagnement"
-                    width="900"
-                    height="600"
-                    className="h-[12rem] w-full object-cover sm:h-[13rem] lg:h-[15rem]"
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(16,27,20,0.05),rgba(16,27,20,0.1)_40%,rgba(16,27,20,0.6))]" />
-                  <div className="absolute inset-x-4 bottom-4 flex items-center justify-between gap-2 rounded-[1.2rem] bg-background/82 px-4 py-2 text-sm text-muted-strong shadow-card backdrop-blur-xl">
-                    <span>Formation</span>
-                    <span>Mentorat</span>
-                    <span>Suivi</span>
-                  </div>
-                </article>
-              </div>
-            </div>
-
-            <div className="grid gap-3 md:grid-cols-3">
-              {missionHighlights.map((item) => (
-                <article
-                  key={item.title}
-                  className="rounded-[1.5rem] border border-border/70 bg-background/62 p-4 backdrop-blur-xl"
-                >
-                  <h3 className="text-base text-foreground">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-muted">
-                    {item.description}
-                  </p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        aria-labelledby="how-it-works-title"
-        className="relative mt-8 scroll-mt-28 px-2 py-8 sm:scroll-mt-32 sm:px-3 sm:py-10 lg:mt-12 lg:px-4 lg:py-14 xl:px-6"
-      >
-        <div className="grid gap-8 lg:grid-cols-[1fr_0.98fr] lg:gap-10 xl:gap-12">
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <span className="section-label">How It Works</span>
-              <h2
-                id="how-it-works-title"
-                className="max-w-3xl font-display text-[clamp(1.95rem,5vw,4.6rem)] leading-[0.98] tracking-[-0.05em] text-foreground"
-              >
-                Un parcours continu de la formation au suivi.
-              </h2>
-              <p className="max-w-xl text-[1rem] leading-8 text-muted-strong sm:text-[1.08rem]">
-                L&apos;utilisateur avance pas a pas: il se forme, structure son
-                projet, echange avec un expert puis suit sa progression dans un
-                meme flux.
-              </p>
-            </div>
-
-            <ol className="grid gap-4">
-              {journeySteps.map((item, index) => (
-                <li
-                  key={item.step}
-                  className="list-none rounded-[1.8rem] border border-border/70 bg-background/65 p-4 shadow-card backdrop-blur-xl sm:p-5"
-                >
-                  <div className="grid gap-4 sm:grid-cols-[auto_1fr] sm:items-start">
-                    <div className="relative flex h-14 w-14 items-center justify-center rounded-[1.35rem] bg-gradient-to-br from-brand to-accent font-display text-lg text-brand-contrast shadow-card">
-                      {item.step}
-                      {index < journeySteps.length - 1 ? (
-                        <span className="pointer-events-none absolute left-1/2 top-full hidden h-8 w-px -translate-x-1/2 bg-gradient-to-b from-border-strong to-transparent sm:block" />
-                      ) : null}
+                <div className=" relative max-w-3xl rounded-[1.45rem] border-border/75 bg-surface/85 p-2.5">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                    <label htmlFor="hero-search" className="sr-only">
+                      Rechercher une formation
+                    </label>
+                    <div className="flex min-h-12 flex-1 items-center gap-3 rounded-xl border border-border/70 bg-background/65 px-4 text-muted">
+                      <SearchIcon />
+                      <input
+                        id="hero-search"
+                        type="search"
+                        placeholder="Rechercher: business plan, financement, gestion..."
+                        className="w-full border-0 bg-transparent text-sm text-foreground placeholder:text-muted outline-none sm:text-[0.96rem]"
+                      />
                     </div>
-
-                    <div className="space-y-2">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                          {item.label}
-                        </p>
-                        <span className="inline-flex min-h-8 items-center rounded-full bg-brand/10 px-3 text-xs font-semibold text-brand-emphasis">
-                          Etape {item.step}
-                        </span>
-                      </div>
-                      <h3 className="max-w-xl text-[1.15rem] leading-7 text-foreground sm:text-[1.28rem]">
-                        {item.title}
-                      </h3>
-                      <p className="max-w-2xl text-sm leading-7 text-muted">
-                        {item.description}
-                      </p>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          <div className="space-y-4 lg:pt-6">
-            <article className="relative overflow-hidden rounded-[2.15rem] bg-surface pb-4 shadow-card md:pb-0">
-              <Image
-                unoptimized
-                src={journeyImagePrimarySrc}
-                alt="Equipe en reunion autour d'une table pour suivre l'avancement d'un projet"
-                width="1400"
-                height="933"
-                className="h-[18rem] w-full object-cover sm:h-[24rem] lg:h-[31rem]"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(16,27,20,0.06),rgba(16,27,20,0.2)_46%,rgba(16,27,20,0.76))]" />
-              <div className="absolute left-4 top-4 inline-flex min-h-10 items-center rounded-full bg-background/84 px-4 text-sm font-semibold text-brand-emphasis shadow-card backdrop-blur-xl">
-                Parcours accompagne
-              </div>
-              <div className="relative z-10 mx-4 -mt-12 rounded-[1.5rem] bg-background/92 p-4 shadow-card backdrop-blur-xl sm:p-5 md:absolute md:inset-x-4 md:bottom-4 md:mx-0 md:mt-0 md:bg-background/84">
-                <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                  Vue d&apos;ensemble
-                </p>
-                <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                  <div>
-                    <p className="font-display text-2xl text-foreground">4</p>
-                    <p className="text-sm text-muted">etapes lisibles</p>
-                  </div>
-                  <div>
-                    <p className="font-display text-2xl text-foreground">1</p>
-                    <p className="text-sm text-muted">parcours continu</p>
-                  </div>
-                  <div>
-                    <p className="font-display text-2xl text-foreground">
-                      1 espace
-                    </p>
-                    <p className="text-sm text-muted">pour avancer</p>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <div className="grid gap-4 md:grid-cols-[0.92fr_1.08fr]">
-              <article className="relative overflow-hidden rounded-[1.8rem] bg-surface pb-4 shadow-card md:pb-0">
-                <Image
-                  unoptimized
-                  src={journeyImageSecondarySrc}
-                  alt="Participants en atelier de travail collaboratif"
-                  width="900"
-                  height="600"
-                  className="h-[13rem] w-full object-cover sm:h-[14rem] lg:h-full"
-                />
-                <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(16,27,20,0.04),rgba(16,27,20,0.14)_42%,rgba(16,27,20,0.6))]" />
-                <div className="relative z-10 mx-4 -mt-8 rounded-[1.2rem] bg-background/90 px-4 py-3 text-sm text-muted-strong shadow-card backdrop-blur-xl md:absolute md:inset-x-4 md:bottom-4 md:mx-0 md:mt-0 md:bg-background/82">
-                  Formation, projet, experts, suivi
-                </div>
-              </article>
-
-              <article className="rounded-[1.8rem] border border-border/70 bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand)_14%,transparent),color-mix(in_oklab,var(--accent)_12%,transparent))] p-5 shadow-card sm:p-6">
-                <p className="section-label">Le principe</p>
-                <h3 className="mt-3 font-display text-[1.5rem] leading-tight text-foreground sm:text-[1.75rem]">
-                  Chaque etape prepare la suivante.
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-muted-strong">
-                  Le design doit toujours montrer la prochaine action utile,
-                  sans perdre l&apos;utilisateur entre plusieurs interfaces.
-                </p>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  <span className="theme-chip">Formation</span>
-                  <span className="theme-chip">Projet</span>
-                  <span className="theme-chip">Experts</span>
-                  <span className="theme-chip">Suivi</span>
-                </div>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        aria-labelledby="features-title"
-        className="relative mt-8 scroll-mt-28 px-2 py-8 sm:scroll-mt-32 sm:px-3 sm:py-10 lg:mt-12 lg:px-4 lg:py-14 xl:px-6"
-      >
-        <div className="space-y-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-4">
-              <span className="section-label">Key Features</span>
-              <h2
-                id="features-title"
-                className="max-w-3xl font-display text-[clamp(1.95rem,5vw,4.6rem)] leading-[0.98] tracking-[-0.05em] text-foreground"
-              >
-                Les modules essentiels dans une seule plateforme.
-              </h2>
-              <p className="max-w-2xl text-[1rem] leading-8 text-muted-strong sm:text-[1.08rem]">
-                L&apos;experience regroupe les briques principales du projet:
-                apprendre, echanger avec des experts, construire son projet,
-                suivre ses avancees et rester connecte a une dynamique
-                collective.
-              </p>
-            </div>
-
-            <div className="rounded-full border border-border/70 bg-background/70 px-4 py-2 text-sm text-muted-strong">
-              5 modules pour guider l&apos;experience
-            </div>
-          </div>
-
-          <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-            <article className="relative overflow-hidden rounded-[2.2rem] bg-surface pb-4 shadow-card md:pb-0">
-              <Image
-                unoptimized
-                src={featuresImagePrimarySrc}
-                alt="Equipe en atelier digital autour d'ordinateurs et d'un tableau de travail"
-                width="1400"
-                height="933"
-                className="h-[18rem] w-full object-cover sm:h-[25rem] lg:h-[30rem]"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(16,27,20,0.08),rgba(16,27,20,0.16)_38%,rgba(16,27,20,0.82))]" />
-              <div className="absolute left-4 top-4 inline-flex min-h-10 items-center rounded-full bg-background/84 px-4 text-sm font-semibold text-brand-emphasis shadow-card backdrop-blur-xl">
-                Apercu plateforme
-              </div>
-              <div className="relative z-10 mx-4 -mt-10 grid gap-3 md:absolute md:inset-x-4 md:bottom-4 md:mx-0 md:mt-0 md:grid-cols-[1.2fr_0.8fr]">
-                <div className="rounded-[1.6rem] bg-background/84 p-4 shadow-card backdrop-blur-xl sm:p-5">
-                  <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                    Module principal
-                  </p>
-                  <h3 className="mt-3 font-display text-[1.45rem] leading-tight text-foreground sm:text-[1.7rem]">
-                    Dashboard central pour relier formation, projet et suivi.
-                  </h3>
-                  <p className="mt-3 text-sm leading-6 text-muted-strong">
-                    Une vue unique pour reprendre son parcours, retrouver ses
-                    actions et passer a l&apos;etape suivante.
-                  </p>
-                </div>
-
-                <div className="rounded-[1.6rem] bg-background/82 p-4 shadow-card backdrop-blur-xl sm:p-5">
-                  <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                    Modules relies
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <span className="theme-chip">Formation</span>
-                    <span className="theme-chip">Experts</span>
-                    <span className="theme-chip">Projet</span>
-                    <span className="theme-chip">Suivi</span>
-                    <span className="theme-chip">Communaute</span>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
-              {featureModules.map((item, index) => (
-                <article
-                  key={item.label}
-                  className={`rounded-[1.8rem] border border-border/70 p-5 shadow-card backdrop-blur-xl sm:p-6 ${
-                    index === 0
-                      ? "bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand)_16%,transparent),color-mix(in_oklab,var(--accent)_10%,transparent))]"
-                      : "bg-background/68"
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="inline-flex h-11 w-11 items-center justify-center rounded-[1rem] bg-gradient-to-br from-brand to-accent font-display text-base text-brand-contrast shadow-card">
-                      0{index + 1}
-                    </span>
-                    <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                      {item.label}
-                    </p>
-                  </div>
-                  <h3 className="mt-4 font-display text-[1.35rem] leading-tight text-foreground">
-                    {item.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-7 text-muted">
-                    {item.description}
-                  </p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        aria-labelledby="target-users-title"
-        className="relative mt-8 scroll-mt-28 px-2 py-8 sm:scroll-mt-32 sm:px-3 sm:py-10 lg:mt-12 lg:px-4 lg:py-14 xl:px-6"
-      >
-        <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr] xl:gap-8">
-          <div className="space-y-5">
-            <div className="space-y-4">
-              <span className="section-label">Target Users</span>
-              <h2
-                id="target-users-title"
-                className="max-w-3xl font-display text-[clamp(1.95rem,5vw,4.6rem)] leading-[0.98] tracking-[-0.05em] text-foreground"
-              >
-                Une plateforme utile pour plusieurs profils de beneficiaires.
-              </h2>
-              <p className="max-w-xl text-[1rem] leading-8 text-muted-strong sm:text-[1.08rem]">
-                INDH Digitale s&apos;adresse a des publics differents, mais avec
-                un meme objectif: rendre l&apos;accompagnement plus lisible,
-                plus accessible et plus actionnable.
-              </p>
-            </div>
-
-            <article className="rounded-[1.9rem] border border-border/70 bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand)_14%,transparent),color-mix(in_oklab,var(--accent)_12%,transparent))] p-5 shadow-card sm:p-6">
-              <p className="section-label">Vision d&apos;ensemble</p>
-              <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                <div>
-                  <p className="font-display text-3xl text-foreground">4</p>
-                  <p className="text-sm text-muted">profils prioritaires</p>
-                </div>
-                <div>
-                  <p className="font-display text-3xl text-foreground">1</p>
-                  <p className="text-sm text-muted">experience continue</p>
-                </div>
-                <div>
-                  <p className="font-display text-3xl text-foreground">
-                    mobile
-                  </p>
-                  <p className="text-sm text-muted">et accessible</p>
-                </div>
-              </div>
-            </article>
-
-            <article className="relative overflow-hidden rounded-[2rem] bg-surface pb-4 shadow-card md:pb-0">
-              <Image
-                unoptimized
-                src={targetUsersImagePrimarySrc}
-                alt="Groupe de jeunes professionnels et porteurs de projets en echange collaboratif"
-                width="1400"
-                height="934"
-                className="h-[17rem] w-full object-cover sm:h-[22rem] xl:h-[25rem]"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(16,27,20,0.06),rgba(16,27,20,0.14)_40%,rgba(16,27,20,0.72))]" />
-              <div className="absolute left-4 top-4 inline-flex min-h-10 items-center rounded-full bg-background/84 px-4 text-sm font-semibold text-brand-emphasis shadow-card backdrop-blur-xl">
-                Publics cibles
-              </div>
-              <div className="relative z-10 mx-4 -mt-10 rounded-[1.45rem] bg-background/92 p-4 shadow-card backdrop-blur-xl sm:p-5 md:absolute md:inset-x-4 md:bottom-4 md:mx-0 md:mt-0 md:bg-background/84">
-                <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                  Une meme base, plusieurs usages
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-strong">
-                  Le design doit rester assez flexible pour parler a des
-                  parcours individuels, collectifs et associatifs.
-                </p>
-              </div>
-            </article>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            {targetUsers.map((item) => (
-              <article
-                key={item.label}
-                className="rounded-[1.9rem] border border-border/70 bg-background/68 p-5 shadow-card backdrop-blur-xl sm:p-6"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-[1rem] bg-gradient-to-br from-brand to-accent font-display text-base text-brand-contrast shadow-card">
-                    {item.step}
-                  </span>
-                  <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                    Profil
-                  </p>
-                </div>
-                <p className="mt-4 text-sm font-semibold text-brand-emphasis">
-                  {item.label}
-                </p>
-                <h3 className="mt-3 font-display text-[1.35rem] leading-tight text-foreground">
-                  {item.title}
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-muted">
-                  {item.description}
-                </p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section
-        aria-labelledby="support-preview-title"
-        className="relative mt-8 scroll-mt-28 px-2 py-8 sm:scroll-mt-32 sm:px-3 sm:py-10 lg:mt-12 lg:px-4 lg:py-14 xl:px-6"
-      >
-        <div className="grid gap-6 xl:grid-cols-[1.02fr_0.98fr] xl:gap-8">
-          <div className="space-y-5">
-            <div className="space-y-4">
-              <span className="section-label">
-                Learning + Project Support Preview
-              </span>
-              <h2
-                id="support-preview-title"
-                className="max-w-3xl font-display text-[clamp(1.95rem,5vw,4.6rem)] leading-[0.98] tracking-[-0.05em] text-foreground"
-              >
-                Les deux piliers les plus forts, reunis dans une meme
-                experience.
-              </h2>
-              <p className="max-w-xl text-[1rem] leading-8 text-muted-strong sm:text-[1.08rem]">
-                La plateforme ne se limite pas a former. Elle aide aussi a
-                construire un projet avec une progression claire, des outils
-                utiles et un appui visible.
-              </p>
-            </div>
-
-            <article className="relative overflow-hidden rounded-[2rem] bg-surface pb-4 shadow-card md:pb-0">
-              <Image
-                unoptimized
-                src={supportPreviewImagePrimarySrc}
-                alt="Personnes en session de travail sur ordinateur entre apprentissage et construction de projet"
-                width="1400"
-                height="934"
-                className="h-[18rem] w-full object-cover sm:h-[22rem] xl:h-[26rem]"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(16,27,20,0.06),rgba(16,27,20,0.18)_42%,rgba(16,27,20,0.78))]" />
-              <div className="absolute left-4 top-4 inline-flex min-h-10 items-center rounded-full bg-background/84 px-4 text-sm font-semibold text-brand-emphasis shadow-card backdrop-blur-xl">
-                Learn and build
-              </div>
-              <div className="relative z-10 mx-4 -mt-10 rounded-[1.45rem] bg-background/92 p-4 shadow-card backdrop-blur-xl sm:p-5 md:absolute md:inset-x-4 md:bottom-4 md:mx-0 md:mt-0 md:bg-background/84">
-                <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                  Une logique simple
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-strong">
-                  Apprendre pour gagner en clarte, puis structurer pour passer
-                  a l&apos;action avec plus de confiance.
-                </p>
-              </div>
-            </article>
-          </div>
-
-          <div className="grid gap-4">
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-1">
-              {supportPillars.map((pillar) => (
-                <article
-                  key={pillar.label}
-                  className="rounded-[1.9rem] border border-border/70 bg-background/68 p-5 shadow-card backdrop-blur-xl sm:p-6"
-                >
-                  <span
-                    className={`inline-flex min-h-9 items-center rounded-full px-4 text-xs font-semibold tracking-[0.18em] uppercase ${pillar.accent}`}
-                  >
-                    {pillar.label}
-                  </span>
-                  <h3 className="mt-4 font-display text-[1.45rem] leading-tight text-foreground">
-                    {pillar.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-7 text-muted">
-                    {pillar.description}
-                  </p>
-                </article>
-              ))}
-            </div>
-
-            <article className="rounded-[1.9rem] border border-border/70 bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand)_14%,transparent),color-mix(in_oklab,var(--accent)_12%,transparent))] p-5 shadow-card sm:p-6">
-              <p className="section-label">Ce que l&apos;utilisateur ressent</p>
-              <h3 className="mt-3 font-display text-[1.55rem] leading-tight text-foreground">
-                Une experience qui apprend puis accompagne.
-              </h3>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-strong">
-                Le contenu aide a comprendre, tandis que les outils projet
-                aident a structurer et faire avancer les prochaines etapes.
-              </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                <span className="theme-chip">Cours en ligne</span>
-                <span className="theme-chip">Parcours guides</span>
-                <span className="theme-chip">Documents utiles</span>
-                <span className="theme-chip">Suivi du projet</span>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section
-        aria-labelledby="impact-title"
-        className="relative mt-8 scroll-mt-28 px-2 py-8 sm:scroll-mt-32 sm:px-3 sm:py-10 lg:mt-12 lg:px-4 lg:py-14 xl:px-6"
-      >
-        <div className="space-y-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div className="space-y-4">
-              <span className="section-label">Success Stories / Impact</span>
-              <h2
-                id="impact-title"
-                className="max-w-3xl font-display text-[clamp(1.95rem,5vw,4.6rem)] leading-[0.98] tracking-[-0.05em] text-foreground"
-              >
-                Montrer des trajectoires inspirantes et un impact attendu.
-              </h2>
-              <p className="max-w-2xl text-[1rem] leading-8 text-muted-strong sm:text-[1.08rem]">
-                Cette section sert a installer la confiance: elle montre ce que
-                la plateforme peut changer pour les beneficiaires et pour
-                l&apos;accompagnement sur le terrain.
-              </p>
-            </div>
-
-            <div className="rounded-full border border-border/70 bg-background/70 px-4 py-2 text-sm text-muted-strong">
-              Histoires, effets attendus, confiance
-            </div>
-          </div>
-
-          <div className="grid gap-4 xl:grid-cols-[1.06fr_0.94fr]">
-            <article className="relative overflow-hidden rounded-[2.1rem] bg-surface pb-4 shadow-card md:pb-0">
-              <Image
-                unoptimized
-                src={impactImagePrimarySrc}
-                alt="Femme entrepreneure en echange confiant dans un environnement professionnel"
-                width="1400"
-                height="933"
-                className="h-[18rem] w-full object-cover sm:h-[24rem] lg:h-[28rem]"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(16,27,20,0.06),rgba(16,27,20,0.18)_38%,rgba(16,27,20,0.84))]" />
-              <div className="absolute left-4 top-4 inline-flex min-h-10 items-center rounded-full bg-background/84 px-4 text-sm font-semibold text-brand-emphasis shadow-card backdrop-blur-xl">
-                Histoire type
-              </div>
-              <div className="relative z-10 mx-4 -mt-10 grid gap-3 md:absolute md:inset-x-4 md:bottom-4 md:mx-0 md:mt-0 md:grid-cols-[1.08fr_0.92fr]">
-                <div className="rounded-[1.6rem] bg-background/88 p-4 shadow-card backdrop-blur-xl sm:p-5">
-                  <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                    Parcours exemple
-                  </p>
-                  <h3 className="mt-3 font-display text-[1.45rem] leading-tight text-foreground sm:text-[1.72rem]">
-                    Une beneficiariaire gagne en clarte, apprend plus vite et
-                    avance avec plus de confiance.
-                  </h3>
-                  <p className="mt-3 text-sm leading-6 text-muted-strong">
-                    Formation, outils projet et suivi l&apos;aident a passer
-                    d&apos;une intention a une demarche plus structuree.
-                  </p>
-                </div>
-
-                <div className="rounded-[1.6rem] bg-background/84 p-4 shadow-card backdrop-blur-xl sm:p-5">
-                  <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                    Signaux de confiance
-                  </p>
-                  <div className="mt-3 grid gap-3">
-                    <div>
-                      <p className="font-display text-2xl text-foreground">
-                        + clarte
-                      </p>
-                      <p className="text-sm text-muted">sur les prochaines etapes</p>
-                    </div>
-                    <div>
-                      <p className="font-display text-2xl text-foreground">
-                        + suivi
-                      </p>
-                      <p className="text-sm text-muted">
-                        dans l&apos;avancement du projet
-                      </p>
-                    </div>
-                    <div>
-                      <p className="font-display text-2xl text-foreground">
-                        + appui
-                      </p>
-                      <p className="text-sm text-muted">entre contenu et expertise</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <div className="grid gap-4">
-              <article className="rounded-[1.9rem] border border-border/70 bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand)_14%,transparent),color-mix(in_oklab,var(--accent)_12%,transparent))] p-5 shadow-card sm:p-6">
-                <p className="section-label">Impact attendu</p>
-                <h3 className="mt-3 font-display text-[1.55rem] leading-tight text-foreground">
-                  Rendre le parcours plus rassurant et plus lisible.
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-muted-strong">
-                  Le design de la plateforme doit montrer qu&apos;elle n&apos;est
-                  pas seulement informative: elle accompagne une progression
-                  concrete.
-                </p>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  <span className="theme-chip">Progression visible</span>
-                  <span className="theme-chip">Appui humain</span>
-                  <span className="theme-chip">Confiance</span>
-                </div>
-              </article>
-
-              <div className="grid gap-4 md:grid-cols-3 xl:grid-cols-1">
-                {impactStories.map((item) => (
-                  <article
-                    key={item.title}
-                    className="rounded-[1.8rem] border border-border/70 bg-background/68 p-5 shadow-card backdrop-blur-xl"
-                  >
-                    <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                      {item.label}
-                    </p>
-                    <h3 className="mt-3 font-display text-[1.28rem] leading-tight text-foreground">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-7 text-muted">
-                      {item.description}
-                    </p>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        aria-labelledby="final-cta-title"
-        className="relative mt-8 scroll-mt-28 px-2 py-8 sm:scroll-mt-32 sm:px-3 sm:py-10 lg:mt-12 lg:px-4 lg:py-14 xl:px-6"
-      >
-        <div className="relative overflow-hidden rounded-[2.2rem] border border-border/70 bg-[linear-gradient(135deg,color-mix(in_oklab,var(--brand)_12%,transparent),color-mix(in_oklab,var(--accent)_14%,transparent))] p-4 shadow-card sm:p-5 lg:p-6">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,color-mix(in_oklab,var(--accent)_16%,transparent),transparent_42rem)]" />
-
-          <div className="relative grid gap-5 xl:grid-cols-[1.04fr_0.96fr] xl:items-stretch">
-            <div className="space-y-5 rounded-[1.9rem] bg-background/78 p-5 backdrop-blur-xl sm:p-6">
-              <div className="space-y-4">
-                <span className="section-label">Final CTA + Contact</span>
-                <h2
-                  id="final-cta-title"
-                  className="max-w-3xl font-display text-[clamp(1.95rem,5vw,4.4rem)] leading-[0.98] tracking-[-0.05em] text-foreground"
-                >
-                  Pret a explorer la plateforme ou a lancer le premier pas.
-                </h2>
-                <p className="max-w-2xl text-[1rem] leading-8 text-muted-strong sm:text-[1.08rem]">
-                  Cette derniere section doit donner une sortie claire:
-                  decouvrir le parcours, contacter l&apos;equipe ou commencer
-                  directement l&apos;experience.
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <Link
-                  href="/how-it-works"
-                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand px-6 text-sm font-semibold text-brand-contrast shadow-soft transition-colors hover:bg-brand-700"
-                >
-                  Explorer la plateforme
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-border-strong/55 bg-background/85 px-6 text-sm font-semibold text-foreground transition-colors hover:bg-surface-strong"
-                >
-                  Contacter l&apos;equipe
-                </Link>
-              </div>
-
-              <div className="grid gap-3 md:grid-cols-3">
-                {finalActions.map((item) => (
-                  <article
-                    key={item.title}
-                    className="rounded-[1.6rem] border border-border/70 bg-background/68 p-4 shadow-card backdrop-blur-xl"
-                  >
-                    <h3 className="text-lg text-foreground">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-muted">
-                      {item.description}
-                    </p>
-                    <Link
-                      href={item.href}
-                      className="mt-4 inline-flex min-h-10 items-center rounded-full bg-surface px-4 text-sm font-semibold text-brand-emphasis transition-colors hover:bg-surface-strong"
+                    <button
+                      type="button"
+                      className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand px-5 text-sm font-semibold text-brand-contrast transition-colors hover:bg-brand-700"
                     >
-                      {item.cta}
-                    </Link>
-                  </article>
-                ))}
+                      Explorer
+                      <ArrowIcon />
+                    </button>
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {topicChips.map((chip) => (
+                      <span
+                        key={chip}
+                        className="inline-flex min-h-9 items-center rounded-full border border-border/65 bg-surface px-3 text-xs font-medium text-muted-strong sm:text-sm"
+                      >
+                        {chip}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <Link
+                    href="/"
+                    className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-brand-contrast shadow-soft transition-colors hover:bg-brand-700"
+                  >
+                    Commencer la formation
+                  </Link>
+                  <Link
+                    href="/"
+                    className="inline-flex min-h-12 items-center justify-center rounded-full border border-border-strong/60 bg-surface px-5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-strong"
+                  >
+                    Voir le parcours complet
+                  </Link>
+                </div>
+
+                <ul className="grid gap-2.5 pt-1 sm:grid-cols-3">
+                  {trustItems.map((item) => (
+                    <li
+                      key={item}
+                      className="inline-flex min-h-11 items-center rounded-full border border-border/70 bg-background/55 px-4 text-sm text-muted-strong"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="relative">
+                <div className="relative overflow-hidden rounded-[1.6rem] border border-border/70 bg-black shadow-[0_24px_55px_color-mix(in_oklab,var(--foreground)_18%,transparent)]">
+                  <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-center justify-between px-4 py-3 text-[0.72rem] font-semibold tracking-[0.16em] text-white/90 uppercase sm:px-5 sm:text-xs">
+                    <span>Session immersive</span>
+                    <span>INDH DIGITALE</span>
+                  </div>
+
+                  <video
+                    className="hero-video aspect-[16/10] w-full object-cover"
+                    src="/VID-20260418.mp4"
+                    autoPlay
+                    muted
+                    loop
+                    controls
+                    preload="metadata"
+                    playsInline
+                  >
+                    Votre navigateur ne prend pas en charge la lecture video.
+                  </video>
+
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/62 via-black/14 to-black/38" />
+                </div>
+
+                <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                  {keyStats.map((stat) => (
+                    <article
+                      key={stat.label}
+                      className="rounded-2xl border border-border/70 bg-surface/92 px-4 py-3 backdrop-blur"
+                    >
+                      <p className="font-display text-[1.35rem] leading-none text-foreground sm:text-[1.6rem]">
+                        {stat.value}
+                      </p>
+                      <p className="mt-2 text-xs tracking-[0.1em] text-muted uppercase">
+                        {stat.label}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-3 pb-16 sm:px-4 sm:pb-20 lg:px-6 lg:pb-24">
+        <div className="mx-auto max-w-full">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold tracking-[0.2em] text-muted uppercase">
+                Formations recommandees
+              </p>
+              <h2 className="mt-1 text-3xl leading-tight text-foreground sm:text-[3.5rem]">
+                Une experience premium de formation.
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-strong sm:text-[0.98rem]">
+                Contenus video, parcours progressifs et accompagnement expert pour passer de l&apos;idee a
+                l&apos;execution.
+              </p>
+            </div>
+            <Link
+              href="/"
+              className="inline-flex min-h-11 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-brand-contrast transition-colors hover:bg-brand-700"
+            >
+              Voir toutes les formations
+            </Link>
+          </div>
+
+          <div className="mt-6 grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
+            <article className="group relative overflow-hidden rounded-[1.75rem] border border-border/70 bg-surface shadow-card">
+              <Image
+                src={formations[0].image}
+                alt={`Formation vedette: ${formations[0].title}`}
+                width={1200}
+                height={720}
+                className="h-[22rem] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04] sm:h-[25rem]"
+                sizes="(min-width: 1280px) 62vw, 100vw"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/78 via-black/28 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="inline-flex min-h-8 items-center rounded-full border border-white/30 bg-black/55 px-3 text-xs font-semibold tracking-[0.08em] text-white uppercase">
+                    {formations[0].badge}
+                  </span>
+                  <span className="text-xs font-semibold text-white/90">{formations[0].learners}</span>
+                </div>
+                <h3 className="mt-3 text-2xl leading-tight text-white sm:text-[2rem]">{formations[0].title}</h3>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-white/86">{formations[0].description}</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className="inline-flex min-h-7 items-center rounded-full border border-white/25 bg-black/55 px-2.5 text-xs text-white/90">
+                    {formations[0].level}
+                  </span>
+                  <span className="inline-flex min-h-7 items-center rounded-full border border-white/25 bg-black/55 px-2.5 text-xs text-white/90">
+                    {formations[0].duration}
+                  </span>
+                  <span className="inline-flex min-h-7 items-center rounded-full border border-white/25 bg-black/55 px-2.5 text-xs text-white/90">
+                    {formations[0].format}
+                  </span>
+                </div>
+                <Link
+                  href="/"
+                  className="mt-4 inline-flex min-h-10 items-center justify-center rounded-lg border border-white/35 bg-white/12 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/20"
+                >
+                  Voir plus
+                </Link>
+              </div>
+            </article>
+
+            <div className="grid gap-3">
+              {formations.slice(1, 5).map((formation) => (
+                <article
+                  key={formation.title}
+                  className="group flex gap-3 overflow-hidden rounded-[1.2rem] border border-border/70 bg-surface/92 p-3 shadow-card transition-transform duration-300 hover:-translate-y-0.5 hover:border-brand/35"
+                >
+                  <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-border/70 sm:h-28 sm:w-28">
+                    <Image
+                      src={formation.image}
+                      alt={`Apercu de ${formation.title}`}
+                      width={600}
+                      height={420}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+                      sizes="112px"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="inline-flex min-h-7 items-center rounded-full border border-brand/35 bg-brand/12 px-2.5 text-[0.68rem] font-semibold tracking-[0.08em] text-brand-emphasis uppercase">
+                        {formation.badge}
+                      </span>
+                      <span className="text-[0.7rem] text-muted">{formation.learners}</span>
+                    </div>
+                    <h3 className="mt-2 line-clamp-2 text-sm font-semibold leading-snug text-foreground sm:text-[0.98rem]">
+                      {formation.title}
+                    </h3>
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
+                      <span className="inline-flex min-h-6 items-center rounded-full border border-border/70 bg-background/55 px-2 text-[0.68rem] text-muted-strong">
+                        {formation.level}
+                      </span>
+                      <span className="inline-flex min-h-6 items-center rounded-full border border-border/70 bg-background/55 px-2 text-[0.68rem] text-muted-strong">
+                        {formation.duration}
+                      </span>
+                      <Link
+                        href="/"
+                        className="ml-auto inline-flex min-h-8 items-center justify-center rounded-md border border-border-strong/55 bg-surface px-3 text-xs font-semibold text-foreground transition-colors hover:bg-surface-strong"
+                      >
+                        Voir plus
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-[1.25rem] border border-border/70 bg-surface/85 p-3.5 sm:p-4">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-xs font-semibold tracking-[0.16em] text-muted uppercase">Mentors en avance</p>
+              <Link
+                href="/"
+                className="inline-flex min-h-9 items-center justify-center rounded-full border border-border-strong/55 px-3 text-xs font-semibold text-foreground transition-colors hover:bg-surface-strong"
+              >
+                Voir plus d&apos;experts
+              </Link>
+            </div>
+            <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
+              {experts.slice(0, 5).map((expert) => (
+                <article
+                  key={expert.name}
+                  className="flex items-center gap-2.5 rounded-xl border border-border/70 bg-background/55 px-2.5 py-2.5"
+                >
+                  <Image
+                    src={expert.image}
+                    alt={`Profil expert ${expert.name}`}
+                    width={320}
+                    height={320}
+                    className="h-11 w-11 rounded-lg object-cover"
+                    sizes="44px"
+                  />
+                  <div className="min-w-0">
+                    <p className="truncate text-xs font-semibold text-foreground">{expert.name}</p>
+                    <p className="truncate text-[0.7rem] text-muted">{expert.role}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="pb-16">
+        <div className="mx-auto max-w-full">
+          <div className="relative overflow-hidden border border-brand-700/30 bg-[linear-gradient(135deg,oklch(0.26_0.06_160),oklch(0.33_0.09_154),oklch(0.28_0.08_28))] px-5 py-6 sm:px-7 sm:py-8">
+           
+
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <p className="text-xs font-semibold tracking-[0.2em] text-white/75 uppercase">Groupes Communaute</p>
+                <h2 className="mt-1 text-3xl leading-tight text-white sm:text-[3.35rem]">
+                  Un espace vivant, en format slides.
+                </h2>
+                <p className="mt-2 max-w-2xl text-sm leading-6 text-white/80 sm:text-[0.98rem]">
+                  Chaque slide represente un groupe actif pour apprendre, echanger et progresser avec des cas
+                  reels.
+                </p>
+              </div>
+              <Link
+                href="/"
+                className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/35 bg-white/14 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/22"
+              >
+                Voir toutes les communautes
+              </Link>
+            </div>
+
+            <div className="horizontal-slides mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
+              {communityGroups.map((group) => (
+                <article
+                  key={group.name}
+                  className="group min-w-[84%] snap-start overflow-hidden rounded-[1.35rem] border border-white/20 bg-black/22 p-3 backdrop-blur-sm sm:min-w-[62%] xl:min-w-[38%]"
+                >
+                  <div className="relative overflow-hidden rounded-xl">
+                    <Image
+                      src={group.image}
+                      alt={`Visuel du groupe ${group.name}`}
+                      width={1200}
+                      height={760}
+                      className="h-46 w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]"
+                      sizes="(min-width: 1280px) 34vw, (min-width: 768px) 58vw, 84vw"
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-black/18 to-transparent" />
+                    <span className="absolute bottom-2 left-2 inline-flex min-h-7 items-center rounded-full border border-white/30 bg-black/55 px-2.5 text-[0.68rem] font-semibold tracking-[0.08em] text-white uppercase">
+                      {group.focus}
+                    </span>
+                  </div>
+
+                  <h3 className="mt-3 text-lg leading-snug text-white">{group.name}</h3>
+                  <p className="mt-1 text-sm leading-6 text-white/82">{group.description}</p>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span className="inline-flex min-h-7 items-center rounded-full border border-white/30 bg-black/35 px-2.5 text-xs text-white/88">
+                      {group.members}
+                    </span>
+                    <span className="inline-flex min-h-7 items-center rounded-full border border-white/30 bg-black/35 px-2.5 text-xs text-white/88">
+                      {group.rhythm}
+                    </span>
+                  </div>
+
+                  <Link
+                    href="/"
+                    className="mt-4 inline-flex min-h-10 items-center justify-center rounded-lg border border-white/35 bg-white/14 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/22"
+                  >
+                    Voir plus
+                  </Link>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-6 grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
+              {communityActivities.map((activity) => (
+                <article
+                  key={activity}
+                  className="rounded-xl border border-white/22 bg-black/26 px-3 py-2.5 text-sm leading-6 text-white/85"
+                >
+                  {activity}
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-3 pb-18 sm:px-4 sm:pb-22 lg:px-6 lg:pb-26">
+        <div className="mx-auto max-w-full">
+          <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_20rem] xl:items-start">
+            <div className="overflow-hidden rounded-[1.6rem] border border-border/70 bg-surface/88 shadow-card">
+              <div className="flex flex-col gap-3 border-b border-border/70 px-5 py-4 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="text-xs font-semibold tracking-[0.2em] text-muted uppercase">Pilotage Par Province</p>
+                  <h2 className="mt-1 text-3xl leading-tight text-foreground sm:text-[3rem]">
+                    Vue operationnelle des pilotes.
+                  </h2>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-strong sm:text-[0.98rem]">
+                    Un format tableau modernise pour lire rapidement l&apos;avancement par province.
+                  </p>
+                </div>
+                <Link
+                  href="/"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-brand-contrast transition-colors hover:bg-brand-700"
+                >
+                  Voir plus
+                </Link>
+              </div>
+
+              <div className="divide-y divide-border/70">
+                {pilotsByProvince.map((item) => {
+                  const completion = Number.parseInt(item.completionRate, 10) || 0;
+                  return (
+                    <article
+                      key={item.province}
+                      className="grid gap-3 px-4 py-3 sm:grid-cols-[6rem_minmax(0,1fr)_auto] sm:items-center"
+                    >
+                      <div className="relative h-16 overflow-hidden rounded-lg border border-border/70">
+                        <Image
+                          src={item.image}
+                          alt={`Province ${item.province}`}
+                          width={1200}
+                          height={740}
+                          className="h-full w-full object-cover"
+                          sizes="96px"
+                        />
+                      </div>
+
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-foreground">{item.province}</p>
+                        <p className="truncate text-xs text-muted">
+                          Pilote: <span className="font-semibold text-foreground">{item.pilot}</span> · {item.specialty}
+                        </p>
+                        <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-border/60">
+                          <span
+                            className="block h-full rounded-full bg-gradient-to-r from-brand to-accent"
+                            style={{ width: `${completion}%` }}
+                          />
+                        </div>
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
+                          <span className="inline-flex min-h-6 items-center rounded-full border border-border/70 bg-background/55 px-2 text-[0.68rem] text-muted-strong">
+                            {item.activeProjects}
+                          </span>
+                          <span className="inline-flex min-h-6 items-center rounded-full border border-border/70 bg-background/55 px-2 text-[0.68rem] text-muted-strong">
+                            {item.linkedTrack}
+                          </span>
+                          <span className="text-[0.68rem] text-brand-emphasis">{item.nextReview}</span>
+                        </div>
+                      </div>
+
+                      <Link
+                        href="/"
+                        className="inline-flex min-h-9 items-center justify-center rounded-md border border-border-strong/55 bg-surface px-3 text-xs font-semibold text-foreground transition-colors hover:bg-surface-strong"
+                      >
+                        Voir plus
+                      </Link>
+                    </article>
+                  );
+                })}
               </div>
             </div>
 
-            <article className="relative overflow-hidden rounded-[1.9rem] bg-surface pb-4 shadow-card md:pb-0">
-              <Image
-                unoptimized
-                src={finalCtaImagePrimarySrc}
-                alt="Equipe en discussion pour passer a l'action autour d'un projet"
-                width="1400"
-                height="934"
-                className="h-[18rem] w-full object-cover sm:h-[24rem] xl:h-full"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(16,27,20,0.06),rgba(16,27,20,0.18)_38%,rgba(16,27,20,0.84))]" />
-              <div className="absolute left-4 top-4 inline-flex min-h-10 items-center rounded-full bg-background/84 px-4 text-sm font-semibold text-brand-emphasis shadow-card backdrop-blur-xl">
-                Prochaine etape
-              </div>
-              <div className="relative z-10 mx-4 -mt-10 rounded-[1.45rem] bg-background/92 p-4 shadow-card backdrop-blur-xl sm:p-5 md:absolute md:inset-x-4 md:bottom-4 md:mx-0 md:mt-0 md:bg-background/84">
-                <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-                  Appel a l&apos;action
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-strong">
-                  Une fin de page efficace donne une direction nette, avec des
-                  actions visibles et un contact simple a activer.
-                </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="theme-chip">Explorer</span>
-                  <span className="theme-chip">Contacter</span>
-                  <span className="theme-chip">Commencer</span>
+            <aside className="xl:sticky xl:top-24">
+              <div className="rounded-[1.35rem] border border-border/70 bg-surface/82 p-4 shadow-card">
+                <p className="text-xs font-semibold tracking-[0.2em] text-muted uppercase">Tableau de bord</p>
+                <h3 className="mt-1 text-2xl leading-tight text-foreground">Synthese province</h3>
+                <div className="mt-4 grid grid-cols-2 gap-2.5">
+                  {provinceInsights.map((insight) => (
+                    <article
+                      key={insight.label}
+                      className="rounded-xl border border-border/70 bg-background/55 px-3 py-2.5"
+                    >
+                      <p className="font-display text-xl leading-none text-foreground">{insight.value}</p>
+                      <p className="mt-1 text-[0.72rem] tracking-[0.08em] text-muted uppercase">{insight.label}</p>
+                    </article>
+                  ))}
                 </div>
+
+                <div className="mt-4 rounded-xl border border-border/70 bg-background/55 p-3">
+                  <p className="text-xs font-semibold tracking-[0.15em] text-muted uppercase">Top provinces</p>
+                  <ul className="mt-2 grid gap-2">
+                    {pilotsByProvince.slice(0, 5).map((item) => (
+                      <li
+                        key={`top-${item.province}`}
+                        className="flex items-center justify-between rounded-lg border border-border/70 bg-surface px-2.5 py-2 text-sm text-muted-strong"
+                      >
+                        <span className="truncate pr-2">{item.province}</span>
+                        <span className="shrink-0 font-semibold text-foreground">{item.completionRate}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <Link
+                  href="/"
+                  className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-brand px-4 text-sm font-semibold text-brand-contrast transition-colors hover:bg-brand-700"
+                >
+                  Voir plus
+                </Link>
               </div>
-            </article>
+            </aside>
           </div>
         </div>
       </section>

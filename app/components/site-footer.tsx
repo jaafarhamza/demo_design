@@ -1,6 +1,8 @@
+"use client";
+
 import type { CSSProperties } from "react";
 import Link from "next/link";
-import { type Locale, localizeHref, uiDictionary } from "../i18n";
+import { usePathname } from "next/navigation";
 
 const footerWordmarkVars = {
   "--footer-wordmark-size": "clamp(4.4rem, 15vw, 13rem)",
@@ -21,16 +23,50 @@ const footerWordmarkShadow = {
   top: "var(--footer-wordmark-shadow-offset)",
 } as CSSProperties;
 
-export function SiteFooter({ locale }: { locale: Locale }) {
-  const copy = uiDictionary[locale].footer;
+export function SiteFooter() {
+  const pathname = usePathname();
+  const isDarkShowcaseRoute = pathname.startsWith("/indh-tv");
+
+  const copy = {
+    description:
+      "Une experience numerique moderne pour orienter, former et accompagner les porteurs de projets INDH avec un parcours clair, accessible et responsive.",
+    navigation: "Navigation",
+    designed:
+      "© 2026 INDH Digitale. Concu pour une presentation moderne, accessible et evolutive.",
+    location: "Maroc · FR",
+  };
 
   return (
-    <footer className="px-3 pb-0 pt-10 sm:px-4 sm:pt-12 lg:px-6 lg:pt-16">
-      <div className="mx-auto max-w-[1440px]">
-        <div className="relative overflow-hidden rounded-[2rem] border border-border/70 bg-surface/78 shadow-card backdrop-blur-2xl">
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/30 to-transparent" />
-          <div className="pointer-events-none absolute -right-24 bottom-0 h-56 w-56 rounded-full bg-accent/10 blur-3xl" />
-          <div className="pointer-events-none absolute -left-20 top-12 h-48 w-48 rounded-full bg-brand/12 blur-3xl" />
+    <footer
+      className={`px-3 pb-0 pt-10 sm:px-4 sm:pt-12 lg:px-6 lg:pt-16 ${
+        isDarkShowcaseRoute ? "dark bg-[oklch(0.1_0.015_210)]" : ""
+      }`}
+    >
+      <div className="mx-auto max-w-full">
+        <div
+          className={`relative overflow-hidden rounded-[2rem] border backdrop-blur-2xl ${
+            isDarkShowcaseRoute
+              ? "border-white/16 bg-black/72 shadow-[0_22px_55px_rgba(0,0,0,0.5)]"
+              : "border-border/70 bg-surface/78 shadow-card"
+          }`}
+        >
+          <div
+            className={`pointer-events-none absolute inset-x-0 top-0 h-px ${
+              isDarkShowcaseRoute
+                ? "bg-gradient-to-r from-transparent via-white/45 to-transparent"
+                : "bg-gradient-to-r from-transparent via-brand/30 to-transparent"
+            }`}
+          />
+          <div
+            className={`pointer-events-none absolute -right-24 bottom-0 h-56 w-56 rounded-full blur-3xl ${
+              isDarkShowcaseRoute ? "bg-white/10" : "bg-accent/10"
+            }`}
+          />
+          <div
+            className={`pointer-events-none absolute -left-20 top-12 h-48 w-48 rounded-full blur-3xl ${
+              isDarkShowcaseRoute ? "bg-brand/20" : "bg-brand/12"
+            }`}
+          />
 
           <div className="grid gap-8 px-5 py-6 sm:px-6 sm:py-8 lg:grid-cols-[1.3fr_0.8fr_0.8fr_0.9fr] lg:gap-10 lg:px-8 lg:py-10">
             <section className="relative space-y-6">
@@ -57,16 +93,10 @@ export function SiteFooter({ locale }: { locale: Locale }) {
 
               <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
-                  href={localizeHref(locale, "/contact")}
+                  href="/"
                   className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-brand-contrast shadow-soft transition-colors hover:bg-brand-700 sm:justify-start"
                 >
-                  {uiDictionary[locale].nav.contactUs}
-                </Link>
-                <Link
-                  href={localizeHref(locale, "/community")}
-                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-border-strong/55 bg-background/80 px-5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-strong sm:justify-start"
-                >
-                  {copy.helpCenter}
+                  Accueil
                 </Link>
               </div>
             </section>
@@ -79,79 +109,80 @@ export function SiteFooter({ locale }: { locale: Locale }) {
                 {copy.navigation}
               </h2>
               <ul className="mt-4 grid gap-2">
-                {copy.primaryLinks.map((item) => (
-                  <li key={`${item.href}-${item.label}`}>
-                    <Link
-                      href={localizeHref(locale, item.href)}
-                      className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
+                <li>
+                  <Link
+                    href="/"
+                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
+                  >
+                    Accueil
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/formation"
+                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
+                  >
+                    Formations
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/dashboard"
+                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/benchmark"
+                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
+                  >
+                    Benchmark
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/province"
+                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
+                  >
+                    Provinces
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/indh-tv"
+                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
+                  >
+                    INDH TV
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/communaute"
+                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
+                  >
+                    Communaute
+                  </Link>
+                </li>
               </ul>
             </nav>
 
-            <nav aria-labelledby="footer-nav-platform" className="relative">
-              <h2
-                id="footer-nav-platform"
-                className="text-sm font-semibold tracking-[0.18em] text-muted uppercase"
-              >
-                {copy.platform}
-              </h2>
-              <ul className="mt-4 grid gap-2">
-                {copy.platformLinks.map((item) => (
-                  <li key={`${item.href}-${item.label}`}>
-                    <Link
-                      href={localizeHref(locale, item.href)}
-                      className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            <nav aria-labelledby="footer-nav-legal" className="relative">
-              <h2
-                id="footer-nav-legal"
-                className="text-sm font-semibold tracking-[0.18em] text-muted uppercase"
-              >
-                {copy.trust}
-              </h2>
-              <ul className="mt-4 grid gap-2">
-                {copy.legalLinks.map((item) => (
-                  <li key={`${item.href}-${item.label}`}>
-                    <Link
-                      href={localizeHref(locale, item.href)}
-                      className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+            <div className="hidden lg:block" />
+            <div className="hidden lg:block" />
           </div>
 
           <div className="relative flex flex-col gap-4 border-t border-border/70 px-5 py-4 text-sm text-muted sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-            <p>
-              {copy.designed}
-            </p>
+            <p>{copy.designed}</p>
             <div className="flex flex-wrap gap-4">
               <span className="inline-flex min-h-10 items-center">
                 {copy.location}
               </span>
-              <Link
-                href={localizeHref(locale, "/contact")}
-                className="inline-flex min-h-10 items-center rounded-full px-2 text-muted transition-colors hover:text-foreground"
-              >
+              <span className="inline-flex min-h-10 items-center rounded-full px-2 text-muted">
                 federation.n.j.e@gmail.com
-              </Link>
+              </span>
             </div>
           </div>
-          
         </div>
 
         <div

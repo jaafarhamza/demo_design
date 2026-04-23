@@ -21,8 +21,8 @@
   --success: oklch(0.65 0.148 150);
   --warning: oklch(0.79 0.15 86);
   --danger: oklch(0.63 0.2 25);
-  --hero-glow: color-mix(in oklab, var(--brand) 28%, transparent);
-  --hero-glow-strong: color-mix(in oklab, var(--accent) 22%, transparent);
+  --hero-glow: color-mix(in oklab, var(--brand) 100%, transparent);
+  --hero-glow-strong: color-mix(in oklab, var(--accent) 100%, transparent);
 }
 
 @theme inline {
@@ -118,17 +118,17 @@ body {
   color: var(--foreground);
   font-family: var(--font-ibm-plex-sans-arabic), sans-serif;
   background-image:
-    radial-gradient(circle at top left, var(--hero-glow), transparent 50rem),
-    radial-gradient(circle at top right, var(--hero-glow-strong), transparent 50rem),
+    radial-gradient(circle at top left, var(--hero-glow), transparent 40rem),
+    radial-gradient(circle at top right, var(--hero-glow-strong), transparent 40rem),
     linear-gradient(
       180deg,
-      color-mix(in oklab, var(--surface) 85%, transparent),
+      color-mix(in oklab, var(--surface) 1%, transparent),
       var(--background)
     );
 }
 
 ::selection {
-  background: color-mix(in oklab, var(--brand) 24%, transparent);
+  background: color-mix(in oklab, var(--brand) 50%, transparent);
   color: var(--foreground);
 }
 
@@ -191,5 +191,47 @@ body {
 
   .theme-swatch {
     @apply h-3.5 w-3.5 rounded-full ring-4 ring-white/35 dark:ring-black/20;
+  }
+
+  .hero-float {
+    animation: hero-float 8s ease-in-out infinite;
+  }
+
+  .horizontal-slides {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--brand) 65%, transparent) transparent;
+  }
+
+  .horizontal-slides::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .horizontal-slides::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .horizontal-slides::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--brand) 58%, transparent);
+  }
+}
+
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-float {
+    animation: none;
   }
 }
