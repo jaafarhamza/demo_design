@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { localizePath } from "../../lib/i18n";
+import { getRequestLocale, tr } from "../../lib/request-locale";
 import {
   catalogueCategories,
   feedbackComments,
@@ -21,18 +23,23 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const locale = await getRequestLocale();
   const { slug } = await params;
   const path = learningPaths.find((item) => item.slug === slug);
 
   if (!path) {
     return {
-      title: "Formation introuvable | INDH Digitale",
+      title: tr(locale, "Formation introuvable | INDH Digitale", "تكوين غير موجود | INDH Digitale"),
     };
   }
 
   return {
     title: `${path.title} | INDH Digitale`,
-    description: `${path.description} Progression, accompagnement expert et retours des apprenants.`,
+    description: tr(
+      locale,
+      `${path.description} Progression, accompagnement expert et retours des apprenants.`,
+      `${path.description} تقدم المسار، مواكبة الخبراء، وآراء المتعلمين.`,
+    ),
   };
 }
 
@@ -46,6 +53,9 @@ function Stars({ rating }: { rating: number }) {
 }
 
 export default async function FormationDetailPage({ params }: PageProps) {
+  const locale = await getRequestLocale();
+  const t = (fr: string, ar: string) => (locale === "ar" ? ar : fr);
+  const href = (pathValue: string) => localizePath(pathValue, locale);
   const { slug } = await params;
   const path = learningPaths.find((item) => item.slug === slug);
 
@@ -70,12 +80,12 @@ export default async function FormationDetailPage({ params }: PageProps) {
               <div className="pointer-events-none absolute -right-18 bottom-0 h-56 w-56 rounded-full bg-accent/28 blur-3xl" />
 
               <nav aria-label="Fil d'Ariane" className="flex flex-wrap items-center gap-2 text-xs text-white/80">
-                <Link href="/" className="underline-offset-4 hover:underline">
-                  Accueil
+                <Link href={href("/")} className="underline-offset-4 hover:underline">
+                  {t("Accueil", "الرئيسية")}
                 </Link>
                 <span>/</span>
-                <Link href="/formation" className="underline-offset-4 hover:underline">
-                  Formations
+                <Link href={href("/formation")} className="underline-offset-4 hover:underline">
+                  {t("Formations", "التكوينات")}
                 </Link>
                 <span>/</span>
                 <span className="text-white">{path.title}</span>
@@ -111,13 +121,13 @@ export default async function FormationDetailPage({ params }: PageProps) {
                   type="button"
                   className="inline-flex min-h-11 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-brand-900 transition-colors hover:bg-white/90"
                 >
-                  Reprendre la formation
+                  {t("Reprendre la formation", "متابعة التكوين")}
                 </button>
                 <Link
-                  href="/formation"
+                  href={href("/formation")}
                   className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/35 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/16"
                 >
-                  Retour au catalogue
+                  {t("Retour au catalogue", "العودة إلى الكتالوج")}
                 </Link>
               </div>
             </article>
@@ -205,10 +215,10 @@ export default async function FormationDetailPage({ params }: PageProps) {
                 </div>
                 <p className="mt-1 text-xs text-muted">Progression moyenne: {module.progress}%</p>
                 <Link
-                  href={`/formation/${path.slug}/module/${module.slug}`}
+                  href={href(`/formation/${path.slug}/module/${module.slug}`)}
                   className="mt-4 inline-flex min-h-10 items-center justify-center rounded-lg border border-border-strong/55 bg-surface px-4 text-sm font-semibold text-foreground transition-colors hover:bg-surface-strong"
                 >
-                  Voir module
+                  {t("Voir module", "عرض الوحدة")}
                 </Link>
               </article>
             ))}

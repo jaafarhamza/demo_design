@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { localizePath } from "../lib/i18n";
+import { getRequestLocale, tr } from "../lib/request-locale";
 
 const featuredEpisode = {
-  title: "INDH Live Studio: De l'idee a l'impact terrain",
+  title: "INDH TV Live Studio: De l'idee a l'impact terrain",
   description:
     "Un format studio inspire des plateformes streaming: retours d'experience, coaching en direct et capsules podcast pour accelerer vos projets.",
   duration: "58 min",
@@ -11,7 +13,14 @@ const featuredEpisode = {
   viewers: "2 140 en lecture cette semaine",
 };
 
-const quickFilters = ["Tout", "En direct", "Podcasts", "Experiences terrain", "Masterclass", "Replays"];
+const quickFilters = [
+  "Tout",
+  "En direct",
+  "Podcasts",
+  "Experiences terrain",
+  "Masterclass",
+  "Replays",
+];
 
 const continueWatching = [
   {
@@ -134,11 +143,46 @@ const scheduleCards = [
   { slot: "Sam - 11:00", title: "Best of provinces", type: "Replay Premiere" },
 ];
 
-export const metadata: Metadata = {
-  title: "INDH TV | INDH Digitale",
-  description:
-    "INDH TV: experiences terrain, podcasts et lives pour inspirer, former et accelerer les projets.",
-};
+const latestNews = [
+  {
+    title:
+      "INDH et Nations Unies: signature d'une declaration d'engagements communs",
+    date: "16 avril 2026",
+    source: "Nations Unies Maroc",
+    summary:
+      "Renforcement du partenariat strategique en faveur d'un developpement humain durable, inclusif et territorialise.",
+    href: "https://morocco.un.org/fr/313908-signature-d%E2%80%99une-declaration-d%E2%80%99engagements-communs-entre-l%E2%80%99initiative-nationale-pour-le",
+  },
+  {
+    title:
+      "Developpement humain: l'INDH et l'ONU renforcent leurs actions communes",
+    date: "16 avril 2026",
+    source: "Le Matin",
+    summary:
+      "Couverture media de la nouvelle etape de cooperation entre la coordination nationale de l'INDH et le SNUD.",
+    href: "https://lematin.ma/nation/developpement-humain-lindh-et-lonu-renforcent-leurs-actions-communes/340761/amp",
+  },
+  {
+    title: "Communique CPDH Ain Sebaa-Hay Mohammadi",
+    date: "2 juillet 2025",
+    source: "INDH Ain Sebaa",
+    summary:
+      "Validation de projets entrepreneuriat, employabilite et ESS avec budget et contribution INDH detailles.",
+    href: "https://indh-ainsebaa.gov.ma/communique-de-presse-sur-la-reunion-cpdh-26-juin-2025/",
+  },
+];
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  return {
+    title: "INDH TV | INDH Digitale",
+    description: tr(
+      locale,
+      "INDH TV: experiences terrain, podcasts et lives pour inspirer, former et accelerer les projets.",
+      "INDH TV: تجارب ميدانية، بودكاست وبث مباشر للإلهام والتكوين وتسريع المشاريع.",
+    ),
+  };
+}
 
 function PlayIcon() {
   return (
@@ -154,11 +198,27 @@ function PlayIcon() {
   );
 }
 
-function LiveDot() {
-  return <span className="h-2 w-2 rounded-full bg-danger shadow-[0_0_0_6px_rgba(255,72,72,0.2)]" />;
+function VideoPlayBadge({ className = "" }: { className?: string }) {
+  return (
+    <span
+      className={`inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/40 bg-black/45 text-white shadow-[0_10px_24px_rgba(0,0,0,0.45)] backdrop-blur-sm ${className}`}
+      aria-hidden="true"
+    >
+      <PlayIcon />
+    </span>
+  );
 }
 
-export default function IndhTvPage() {
+function LiveDot() {
+  return (
+    <span className="h-2 w-2 rounded-full bg-danger shadow-[0_0_0_6px_rgba(255,72,72,0.2)]" />
+  );
+}
+
+export default async function IndhTvPage() {
+  const locale = await getRequestLocale();
+  const t = (fr: string, ar: string) => (locale === "ar" ? ar : fr);
+  const href = (path: string) => localizePath(path, locale);
   return (
     <main className="dark flex-1 bg-[linear-gradient(180deg,oklch(0.16_0.02_210),oklch(0.14_0.018_210),oklch(0.1_0.015_210))] text-white">
       <section className="relative min-h-svh overflow-hidden">
@@ -184,19 +244,21 @@ export default function IndhTvPage() {
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,rgba(6,10,20,0.95)_12%,rgba(6,10,20,0.82)_50%,rgba(6,10,20,0.55)_72%,rgba(6,10,20,0.88)_100%)]" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[oklch(0.1_0.015_210)] to-transparent" />
 
-        <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-full items-center px-3 pb-10 sm:px-4 sm:pb-12 lg:px-6 lg:pb-14">
-          <div className="w-full max-w-5xl">
+        <div className="relative z-10 mx-auto flex min-h-svh max-w-full items-center px-3 pb-10 sm:px-4 sm:pb-12 lg:px-6 lg:pb-14">
+          <div className="mx-auto w-full max-w-5xl text-center">
             <p className="inline-flex min-h-9 items-center gap-2 rounded-full border border-danger/45 bg-danger/15 px-4 text-xs font-semibold tracking-[0.16em] text-danger uppercase">
               <LiveDot />
-              En direct sur INDH TV
+              {t("En direct sur INDH TV", "مباشر على INDH TV")}
             </p>
-            <h1 className="mt-4 max-w-4xl text-[2.1rem] leading-[1.03] text-white sm:text-[2.9rem] lg:text-[3.9rem]">
-              {featuredEpisode.title}
+            <h1 className="mt-4 mx-auto max-w-5xl text-[2.2rem] leading-[1.02] text-white sm:text-[3rem] lg:text-[6rem]">
+              <span className="mt-3 block bg-gradient-to-r from-white via-brand-100 to-accent-200 bg-clip-text text-transparent drop-shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
+                INDH TV: De l&apos;idee a l&apos;impact terrain
+              </span>
             </h1>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-white/85 sm:text-[1.02rem]">
+            <p className="mt-3 mx-auto max-w-3xl text-sm leading-7 text-white/85 sm:text-[1.02rem]">
               {featuredEpisode.description}
             </p>
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
               <span className="inline-flex min-h-8 items-center rounded-full border border-white/25 bg-black/35 px-3 text-xs text-white/88">
                 {featuredEpisode.duration}
               </span>
@@ -207,38 +269,43 @@ export default function IndhTvPage() {
                 {featuredEpisode.viewers}
               </span>
             </div>
-            <div className="mt-5 flex flex-wrap gap-3">
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
               <Link
                 href="#indh-tv-lives"
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-slate-900 transition-colors hover:bg-white/92"
               >
                 <PlayIcon />
-                Regarder maintenant
+                {t("Regarder maintenant", "شاهد الآن")}
               </Link>
               <Link
                 href="#indh-tv-podcasts"
                 className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/30 bg-black/28 px-5 text-sm font-semibold text-white transition-colors hover:bg-black/42"
               >
-                Explorer podcasts
+                {t("Explorer podcasts", "استكشاف البودكاست")}
               </Link>
             </div>
 
             <aside className="mt-7 rounded-[1.35rem] border border-white/20 bg-black/36 p-4 backdrop-blur-md sm:p-5">
               <p className="text-xs font-semibold tracking-[0.17em] text-white/72 uppercase">
-                Grille hebdomadaire
+                {t("Grille hebdomadaire", "البرمجة الأسبوعية")}
               </p>
               <div className="mt-3 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
                 {scheduleCards.map((item) => (
-                  <article key={item.title} className="rounded-lg border border-white/20 bg-black/35 p-3">
+                  <article
+                    key={item.title}
+                    className="rounded-lg border border-white/20 bg-black/35 p-3"
+                  >
                     <p className="text-xs text-white/70">{item.slot}</p>
-                    <p className="mt-1 text-sm font-semibold text-white">{item.title}</p>
+                    <p className="mt-1 text-sm font-semibold text-white">
+                      {item.title}
+                    </p>
                     <p className="mt-1 text-xs text-white/70">{item.type}</p>
                   </article>
                 ))}
               </div>
             </aside>
 
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
               {quickFilters.map((chip, index) => (
                 <button
                   key={chip}
@@ -257,15 +324,75 @@ export default function IndhTvPage() {
         </div>
       </section>
 
+      <section
+        id="indh-tv-news"
+        className="px-3 pb-12 sm:px-4 sm:pb-14 lg:px-6 lg:pb-16"
+      >
+        <div className="mx-auto max-w-full">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold tracking-[0.2em] text-white/62 uppercase">
+                Actualites INDH
+              </p>
+              <h2 className="mt-1 text-3xl leading-tight text-white sm:text-[2.6rem]">
+                Dernieres nouvelles et annonces.
+              </h2>
+            </div>
+            <a
+              href="https://morocco.un.org/fr/press-centre/press-releases"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-10 items-center rounded-full border border-white/20 bg-white/8 px-4 text-sm font-semibold text-white/90 transition-colors hover:bg-white/14"
+            >
+              Voir plus d&apos;actualites
+            </a>
+          </div>
+
+          <div className="mt-5 grid gap-3 lg:grid-cols-3">
+            {latestNews.map((item) => (
+              <article
+                key={item.title}
+                className="group rounded-[1.15rem] border border-white/16 bg-white/6 p-3.5 backdrop-blur-sm transition-colors hover:bg-white/10"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex min-h-7 items-center rounded-full border border-white/25 bg-black/28 px-2.5 text-[0.66rem] font-semibold tracking-[0.08em] text-white/80 uppercase">
+                    {item.source}
+                  </span>
+                  <span className="text-xs text-white/64">{item.date}</span>
+                </div>
+                <h3 className="mt-3 text-lg leading-snug text-white">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-white/76">
+                  {item.summary}
+                </p>
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-4 inline-flex min-h-9 items-center justify-center rounded-lg border border-white/30 bg-black/25 px-3.5 text-xs font-semibold text-white transition-colors hover:bg-black/40"
+                >
+                  Lire l&apos;article
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="px-3 pb-12 sm:px-4 sm:pb-14 lg:px-6 lg:pb-16">
         <div className="mx-auto max-w-full">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-xs font-semibold tracking-[0.2em] text-white/62 uppercase">Pour vous</p>
-              <h2 className="mt-1 text-3xl leading-tight text-white sm:text-[2.55rem]">Continuer a regarder</h2>
+              <p className="text-xs font-semibold tracking-[0.2em] text-white/62 uppercase">
+                Pour vous
+              </p>
+              <h2 className="mt-1 text-3xl leading-tight text-white sm:text-[2.55rem]">
+                Continuer a regarder
+              </h2>
             </div>
             <Link
-              href="/formation"
+                href={href("/formation")}
               className="inline-flex min-h-10 items-center rounded-full border border-white/20 bg-white/8 px-4 text-sm font-semibold text-white/90 transition-colors hover:bg-white/14"
             >
               Voir toutes les formations
@@ -287,12 +414,15 @@ export default function IndhTvPage() {
                     sizes="(min-width: 1280px) 31vw, (min-width: 640px) 48vw, 86vw"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+                  <VideoPlayBadge className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2" />
                   <span className="absolute left-3 top-3 inline-flex min-h-7 items-center rounded-full border border-white/25 bg-black/50 px-2.5 text-[0.68rem] font-semibold tracking-[0.08em] text-white uppercase">
                     {item.type}
                   </span>
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg leading-snug text-white">{item.title}</h3>
+                  <h3 className="text-lg leading-snug text-white">
+                    {item.title}
+                  </h3>
                   <p className="mt-1 text-xs text-white/70">{item.duration}</p>
                   <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-white/15">
                     <span
@@ -300,7 +430,9 @@ export default function IndhTvPage() {
                       style={{ width: `${item.progress}%` }}
                     />
                   </div>
-                  <p className="mt-1 text-xs text-white/70">{item.progress}% regarde</p>
+                  <p className="mt-1 text-xs text-white/70">
+                    {item.progress}% regarde
+                  </p>
                 </div>
               </article>
             ))}
@@ -308,11 +440,16 @@ export default function IndhTvPage() {
         </div>
       </section>
 
-      <section id="indh-tv-lives" className="bg-[linear-gradient(130deg,rgba(130,16,16,0.22),rgba(18,18,26,0.9),rgba(18,18,26,0.96))] px-3 py-12 sm:px-4 sm:py-14 lg:px-6 lg:py-16">
+      <section
+        id="indh-tv-lives"
+        className="bg-[linear-gradient(130deg,rgba(130,16,16,0.22),rgba(18,18,26,0.9),rgba(18,18,26,0.96))] px-3 py-12 sm:px-4 sm:py-14 lg:px-6 lg:py-16"
+      >
         <div className="mx-auto max-w-full">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-xs font-semibold tracking-[0.2em] text-white/62 uppercase">Lives & Replays</p>
+              <p className="text-xs font-semibold tracking-[0.2em] text-white/62 uppercase">
+                Lives & Replays
+              </p>
               <h2 className="mt-1 text-3xl leading-tight text-white sm:text-[2.5rem]">
                 Sessions live, podcast et interventions terrain.
               </h2>
@@ -321,8 +458,7 @@ export default function IndhTvPage() {
               type="button"
               className="inline-flex min-h-10 items-center gap-2 rounded-full border border-danger/45 bg-danger/15 px-4 text-sm font-semibold text-white"
             >
-              <LiveDot />
-              3 lives programmes
+              <LiveDot />3 lives programmes
             </button>
           </div>
 
@@ -341,14 +477,19 @@ export default function IndhTvPage() {
                     sizes="(min-width: 1280px) 32vw, (min-width: 768px) 48vw, 100vw"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <VideoPlayBadge className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2" />
                   <span className="absolute left-3 top-3 inline-flex min-h-7 items-center gap-2 rounded-full border border-danger/45 bg-danger/25 px-3 text-[0.68rem] font-semibold tracking-[0.08em] text-white uppercase">
                     <LiveDot />
                     Live
                   </span>
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg leading-snug text-white">{show.title}</h3>
-                  <p className="mt-1 text-sm text-white/75">Host: {show.host}</p>
+                  <h3 className="text-lg leading-snug text-white">
+                    {show.title}
+                  </h3>
+                  <p className="mt-1 text-sm text-white/75">
+                    Host: {show.host}
+                  </p>
                   <p className="mt-1 text-xs text-white/65">{show.schedule}</p>
                   <button
                     type="button"
@@ -364,9 +505,14 @@ export default function IndhTvPage() {
         </div>
       </section>
 
-      <section id="indh-tv-podcasts" className="px-3 py-12 sm:px-4 sm:py-14 lg:px-6 lg:py-16">
+      <section
+        id="indh-tv-podcasts"
+        className="px-3 py-12 sm:px-4 sm:py-14 lg:px-6 lg:py-16"
+      >
         <div className="mx-auto max-w-full">
-          <p className="text-xs font-semibold tracking-[0.2em] text-white/62 uppercase">Podcasts INDH TV</p>
+          <p className="text-xs font-semibold tracking-[0.2em] text-white/62 uppercase">
+            Podcasts INDH TV
+          </p>
           <h2 className="mt-1 text-3xl leading-tight text-white sm:text-[2.5rem]">
             Capsules audio et interviews d&apos;experts.
           </h2>
@@ -379,17 +525,24 @@ export default function IndhTvPage() {
               >
                 <div className="absolute -right-10 top-0 h-24 w-24 rounded-full bg-white/15 blur-2xl" />
                 <div className="relative flex gap-3">
-                  <Image
-                    src={podcast.image}
-                    alt={podcast.title}
-                    width={220}
-                    height={220}
-                    className="h-20 w-20 rounded-xl border border-white/20 object-cover"
-                    sizes="80px"
-                  />
+                  <div className="relative h-20 w-20 shrink-0">
+                    <Image
+                      src={podcast.image}
+                      alt={podcast.title}
+                      width={220}
+                      height={220}
+                      className="h-20 w-20 rounded-xl border border-white/20 object-cover"
+                      sizes="80px"
+                    />
+                    <VideoPlayBadge className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2" />
+                  </div>
                   <div className="min-w-0">
-                    <h3 className="text-lg leading-snug text-white">{podcast.title}</h3>
-                    <p className="mt-1 text-xs text-white/75">{podcast.episodes}</p>
+                    <h3 className="text-lg leading-snug text-white">
+                      {podcast.title}
+                    </h3>
+                    <p className="mt-1 text-xs text-white/75">
+                      {podcast.episodes}
+                    </p>
                     <button
                       type="button"
                       className="mt-2 inline-flex min-h-8 items-center rounded-full border border-white/30 bg-black/22 px-3 text-xs font-semibold tracking-[0.08em] text-white uppercase"
@@ -408,13 +561,15 @@ export default function IndhTvPage() {
         <div className="mx-auto max-w-full">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-xs font-semibold tracking-[0.2em] text-white/62 uppercase">Experiences</p>
+              <p className="text-xs font-semibold tracking-[0.2em] text-white/62 uppercase">
+                Experiences
+              </p>
               <h2 className="mt-1 text-3xl leading-tight text-white sm:text-[2.5rem]">
                 Stories de terrain en format binge-ready.
               </h2>
             </div>
             <Link
-              href="/formation"
+                href={href("/formation")}
               className="inline-flex min-h-10 items-center rounded-full border border-white/20 bg-white/8 px-4 text-sm font-semibold text-white/90 transition-colors hover:bg-white/14"
             >
               Voir plus
@@ -436,6 +591,7 @@ export default function IndhTvPage() {
                     sizes="(min-width: 1280px) 35vw, (min-width: 640px) 54vw, 88vw"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/74 via-black/18 to-transparent" />
+                  <VideoPlayBadge className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2" />
                 </div>
                 <div className="p-4">
                   <div className="flex items-center justify-between gap-2">
@@ -444,7 +600,9 @@ export default function IndhTvPage() {
                     </span>
                     <span className="text-xs text-white/72">{item.meta}</span>
                   </div>
-                  <h3 className="mt-2 text-lg leading-snug text-white">{item.title}</h3>
+                  <h3 className="mt-2 text-lg leading-snug text-white">
+                    {item.title}
+                  </h3>
                 </div>
               </article>
             ))}

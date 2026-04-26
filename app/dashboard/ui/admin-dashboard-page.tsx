@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { Locale, localizePath } from "../../lib/i18n";
 
 type ActivityStatus = "Planifie" | "En cours" | "Bloque" | "Termine";
 type ActivityPriority = "Haute" | "Moyenne" | "Basse";
@@ -176,8 +177,8 @@ const dateRangeOptions = [
 
 type DateRangeFilter = (typeof dateRangeOptions)[number]["value"];
 
-function formatDateLabel(value: string) {
-  return new Intl.DateTimeFormat("fr-FR", {
+function formatDateLabel(value: string, locale: Locale) {
+  return new Intl.DateTimeFormat(locale === "ar" ? "ar-MA" : "fr-FR", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -212,24 +213,28 @@ function priorityChipClass(priority: ActivityPriority) {
   return "border-success/35 bg-success/12 text-success";
 }
 
-export function AdminDashboardPage() {
-  const [selectedProvince, setSelectedProvince] = useState("Toutes");
-  const [selectedStatus, setSelectedStatus] = useState("Tous");
-  const [selectedCategory, setSelectedCategory] = useState("Toutes");
+export function AdminDashboardPage({ locale = "fr" }: { locale?: Locale }) {
+  const t = (fr: string, ar: string) => (locale === "ar" ? ar : fr);
+  const allProvinceLabel = t("Toutes", "الكل");
+  const allStatusLabel = t("Tous", "الكل");
+  const allCategoryLabel = t("Toutes", "الكل");
+  const [selectedProvince, setSelectedProvince] = useState(allProvinceLabel);
+  const [selectedStatus, setSelectedStatus] = useState(allStatusLabel);
+  const [selectedCategory, setSelectedCategory] = useState(allCategoryLabel);
   const [dateRange, setDateRange] = useState<DateRangeFilter>("30");
   const [search, setSearch] = useState("");
 
   const provinces = useMemo(
-    () => ["Toutes", ...new Set(activities.map((activity) => activity.province))],
-    []
+    () => [allProvinceLabel, ...new Set(activities.map((activity) => activity.province))],
+    [allProvinceLabel]
   );
   const statuses = useMemo(
-    () => ["Tous", ...new Set(activities.map((activity) => activity.status))],
-    []
+    () => [allStatusLabel, ...new Set(activities.map((activity) => activity.status))],
+    [allStatusLabel]
   );
   const categories = useMemo(
-    () => ["Toutes", ...new Set(activities.map((activity) => activity.category))],
-    []
+    () => [allCategoryLabel, ...new Set(activities.map((activity) => activity.category))],
+    [allCategoryLabel]
   );
 
   const filteredActivities = useMemo(() => {
@@ -237,15 +242,15 @@ export function AdminDashboardPage() {
     const trimmedSearch = search.trim().toLowerCase();
 
     return activities.filter((activity) => {
-      if (selectedProvince !== "Toutes" && activity.province !== selectedProvince) {
+      if (selectedProvince !== allProvinceLabel && activity.province !== selectedProvince) {
         return false;
       }
 
-      if (selectedStatus !== "Tous" && activity.status !== selectedStatus) {
+      if (selectedStatus !== allStatusLabel && activity.status !== selectedStatus) {
         return false;
       }
 
-      if (selectedCategory !== "Toutes" && activity.category !== selectedCategory) {
+      if (selectedCategory !== allCategoryLabel && activity.category !== selectedCategory) {
         return false;
       }
 
@@ -267,7 +272,16 @@ export function AdminDashboardPage() {
 
       return true;
     });
-  }, [selectedProvince, selectedStatus, selectedCategory, dateRange, search]);
+  }, [
+    selectedProvince,
+    selectedStatus,
+    selectedCategory,
+    dateRange,
+    search,
+    allProvinceLabel,
+    allStatusLabel,
+    allCategoryLabel,
+  ]);
 
   const stats = useMemo(() => {
     const total = filteredActivities.length;
@@ -337,33 +351,38 @@ export function AdminDashboardPage() {
             <div className="relative grid gap-5 p-4 sm:p-6 xl:grid-cols-[1.08fr_0.92fr] xl:gap-8">
               <div>
                 <p className="inline-flex min-h-8 items-center  px-3 text-[0.68rem] font-semibold tracking-[0.12em] text-brand-emphasis uppercase">
-                  Admin Control Center
+                  {t("Admin Control Center", "مركز التحكم الإداري")}
                 </p>
                 <h1 className="mt-3 max-w-4xl text-4xl leading-[1.03] text-foreground sm:text-5xl xl:text-[4.2rem]">
-                  Tableau de bord intelligent pour piloter toutes les activites.
+                  {t(
+                    "Tableau de bord intelligent pour piloter toutes les activites.",
+                    "لوحة قيادة ذكية لتدبير جميع الأنشطة.",
+                  )}
                 </h1>
                 <p className="mt-3 max-w-3xl text-sm leading-7 text-muted-strong sm:text-base">
-                  Filtrez les actions, suivez la performance par province et gardez une vue operationnelle en
-                  temps reel sur l&apos;ensemble de la plateforme INDH Digitale.
+                  {t(
+                    "Filtrez les actions, suivez la performance par province et gardez une vue operationnelle en temps reel sur l'ensemble de la plateforme INDH Digitale.",
+                    "قم بتصفية الأنشطة، وتتبع الأداء حسب الإقليم، والحفاظ على رؤية تشغيلية لحظية عبر منصة INDH Digitale.",
+                  )}
                 </p>
 
                 <div className="mt-5 grid gap-2 sm:grid-cols-3">
                   <article className="rounded-xl border border-border/70 bg-background/72 p-3">
                     <p className="font-display text-2xl leading-none text-foreground">{stats.total}</p>
                     <p className="mt-1 text-[0.7rem] tracking-[0.1em] text-muted uppercase">
-                      Activites filtrees
+                      {t("Activites filtrees", "الأنشطة المصفاة")}
                     </p>
                   </article>
                   <article className="rounded-xl border border-border/70 bg-background/72 p-3">
                     <p className="font-display text-2xl leading-none text-foreground">{stats.completionRate}%</p>
                     <p className="mt-1 text-[0.7rem] tracking-[0.1em] text-muted uppercase">
-                      Taux de completion
+                      {t("Taux de completion", "نسبة الإتمام")}
                     </p>
                   </article>
                   <article className="rounded-xl border border-border/70 bg-background/72 p-3">
                     <p className="font-display text-2xl leading-none text-foreground">{stats.participants}</p>
                     <p className="mt-1 text-[0.7rem] tracking-[0.1em] text-muted uppercase">
-                      Participants cumules
+                      {t("Participants cumules", "إجمالي المشاركين")}
                     </p>
                   </article>
                 </div>
@@ -371,23 +390,23 @@ export function AdminDashboardPage() {
 
               <article className="rounded-[1.35rem] border border-border/70 bg-background/65 p-4">
                 <p className="text-xs font-semibold tracking-[0.16em] text-muted uppercase">
-                  Etat global
+                  {t("Etat global", "الحالة العامة")}
                 </p>
                 <div className="mt-3 grid grid-cols-2 gap-2.5">
                   <div className="rounded-xl border border-border/70 bg-surface p-3">
-                    <p className="text-xs text-muted">En cours</p>
+                    <p className="text-xs text-muted">{t("En cours", "قيد التنفيذ")}</p>
                     <p className="mt-1 text-2xl font-semibold text-foreground">{stats.inProgress}</p>
                   </div>
                   <div className="rounded-xl border border-border/70 bg-surface p-3">
-                    <p className="text-xs text-muted">Termines</p>
+                    <p className="text-xs text-muted">{t("Termines", "مكتملة")}</p>
                     <p className="mt-1 text-2xl font-semibold text-foreground">{stats.completed}</p>
                   </div>
                   <div className="rounded-xl border border-border/70 bg-surface p-3">
-                    <p className="text-xs text-muted">Bloques</p>
+                    <p className="text-xs text-muted">{t("Bloques", "متعثرة")}</p>
                     <p className="mt-1 text-2xl font-semibold text-foreground">{stats.blocked}</p>
                   </div>
                   <div className="rounded-xl border border-border/70 bg-surface p-3">
-                    <p className="text-xs text-muted">Progression moyenne</p>
+                    <p className="text-xs text-muted">{t("Progression moyenne", "متوسط التقدم")}</p>
                     <p className="mt-1 text-2xl font-semibold text-foreground">{stats.averageProgress}%</p>
                   </div>
                 </div>
@@ -398,14 +417,17 @@ export function AdminDashboardPage() {
                   />
                 </div>
                 <p className="mt-2 text-xs text-muted">
-                  Progression moyenne calculee automatiquement sur les activites visibles.
+                  {t(
+                    "Progression moyenne calculee automatiquement sur les activites visibles.",
+                    "يتم احتساب متوسط التقدم تلقائيا على الأنشطة المعروضة.",
+                  )}
                 </p>
 
                 <Link
-                  href="/formation"
+                  href={localizePath("/formation", locale)}
                   className="mt-4 inline-flex min-h-10 items-center justify-center rounded-full border border-border-strong/55 bg-surface px-4 text-sm font-semibold text-foreground transition-colors hover:bg-surface-strong"
                 >
-                  Ouvrir les parcours formation
+                  {t("Ouvrir les parcours formation", "فتح مسارات التكوين")}
                 </Link>
               </article>
             </div>
@@ -418,29 +440,33 @@ export function AdminDashboardPage() {
           <article className="rounded-[1.6rem] border border-border/70 bg-surface/88 p-4 shadow-card sm:p-5">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">Filtres admin</p>
+                <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
+                  {t("Filtres admin", "فلاتر الإدارة")}
+                </p>
                 <h2 className="mt-1 text-3xl leading-tight text-foreground sm:text-[2.7rem]">
-                  Filtrer les activites et statistiques
+                  {t("Filtrer les activites et statistiques", "تصفية الأنشطة والإحصائيات")}
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={() => {
-                  setSelectedProvince("Toutes");
-                  setSelectedStatus("Tous");
-                  setSelectedCategory("Toutes");
+                  setSelectedProvince(allProvinceLabel);
+                  setSelectedStatus(allStatusLabel);
+                  setSelectedCategory(allCategoryLabel);
                   setDateRange("30");
                   setSearch("");
                 }}
                 className="inline-flex min-h-10 items-center justify-center rounded-full border border-border-strong/55 bg-surface px-4 text-sm font-semibold text-foreground transition-colors hover:bg-surface-strong"
               >
-                Reinitialiser
+                {t("Reinitialiser", "إعادة التعيين")}
               </button>
             </div>
 
             <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
               <label className="grid gap-1.5">
-                <span className="text-[0.72rem] font-semibold tracking-[0.1em] text-muted uppercase">Province</span>
+                <span className="text-[0.72rem] font-semibold tracking-[0.1em] text-muted uppercase">
+                  {t("Province", "الإقليم")}
+                </span>
                 <select
                   value={selectedProvince}
                   onChange={(event) => setSelectedProvince(event.target.value)}
@@ -455,7 +481,9 @@ export function AdminDashboardPage() {
               </label>
 
               <label className="grid gap-1.5">
-                <span className="text-[0.72rem] font-semibold tracking-[0.1em] text-muted uppercase">Statut</span>
+                <span className="text-[0.72rem] font-semibold tracking-[0.1em] text-muted uppercase">
+                  {t("Statut", "الحالة")}
+                </span>
                 <select
                   value={selectedStatus}
                   onChange={(event) => setSelectedStatus(event.target.value)}
@@ -471,7 +499,7 @@ export function AdminDashboardPage() {
 
               <label className="grid gap-1.5">
                 <span className="text-[0.72rem] font-semibold tracking-[0.1em] text-muted uppercase">
-                  Categorie
+                  {t("Categorie", "الفئة")}
                 </span>
                 <select
                   value={selectedCategory}
@@ -487,7 +515,9 @@ export function AdminDashboardPage() {
               </label>
 
               <label className="grid gap-1.5">
-                <span className="text-[0.72rem] font-semibold tracking-[0.1em] text-muted uppercase">Periode</span>
+                <span className="text-[0.72rem] font-semibold tracking-[0.1em] text-muted uppercase">
+                  {t("Periode", "الفترة")}
+                </span>
                 <select
                   value={dateRange}
                   onChange={(event) => setDateRange(event.target.value as DateRangeFilter)}
@@ -502,12 +532,14 @@ export function AdminDashboardPage() {
               </label>
 
               <label className="grid gap-1.5">
-                <span className="text-[0.72rem] font-semibold tracking-[0.1em] text-muted uppercase">Recherche</span>
+                <span className="text-[0.72rem] font-semibold tracking-[0.1em] text-muted uppercase">
+                  {t("Recherche", "بحث")}
+                </span>
                 <input
                   type="search"
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Titre, province, expert..."
+                  placeholder={t("Titre, province, expert...", "العنوان، الإقليم، الخبير...")}
                   className="min-h-10 rounded-lg border border-border/70 bg-background/70 px-3 text-sm text-foreground placeholder:text-muted"
                 />
               </label>
@@ -520,8 +552,12 @@ export function AdminDashboardPage() {
         <div className="mx-auto max-w-full">
           <div className="grid gap-5 xl:grid-cols-[1.08fr_0.92fr]">
             <article className="rounded-[1.6rem] border border-border/70 bg-surface/88 p-4 shadow-card sm:p-5">
-              <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">Statistiques province</p>
-              <h3 className="mt-1 text-2xl leading-tight text-foreground">Distribution des activites</h3>
+              <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
+                {t("Statistiques province", "إحصائيات الأقاليم")}
+              </p>
+              <h3 className="mt-1 text-2xl leading-tight text-foreground">
+                {t("Distribution des activites", "توزيع الأنشطة")}
+              </h3>
 
               <div className="mt-4 space-y-3">
                 {byProvince.length > 0 ? (
@@ -541,15 +577,19 @@ export function AdminDashboardPage() {
                   ))
                 ) : (
                   <p className="rounded-xl border border-border/70 bg-background/62 p-3 text-sm text-muted">
-                    Aucune activite pour les filtres actuels.
+                    {t("Aucune activite pour les filtres actuels.", "لا توجد أنشطة للفلاتر الحالية.")}
                   </p>
                 )}
               </div>
             </article>
 
             <article className="rounded-[1.6rem] border border-border/70 bg-surface/88 p-4 shadow-card sm:p-5">
-              <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">Top contributeurs</p>
-              <h3 className="mt-1 text-2xl leading-tight text-foreground">Experts les plus mobilises</h3>
+              <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
+                {t("Top contributeurs", "أكثر المساهمين")}
+              </p>
+              <h3 className="mt-1 text-2xl leading-tight text-foreground">
+                {t("Experts les plus mobilises", "الخبراء الأكثر تعبئة")}
+              </h3>
 
               <div className="mt-4 space-y-2.5">
                 {topExperts.length > 0 ? (
@@ -561,17 +601,17 @@ export function AdminDashboardPage() {
                       <div>
                         <p className="text-sm font-semibold text-foreground">{name}</p>
                         <p className="text-xs text-muted">
-                          Rang #{index + 1}
+                          {t("Rang", "الرتبة")} #{index + 1}
                         </p>
                       </div>
                       <span className="inline-flex min-h-7 items-center rounded-full border border-brand/35 bg-brand/12 px-2.5 text-xs font-semibold text-brand-emphasis">
-                        {count} activites
+                        {count} {t("activites", "أنشطة")}
                       </span>
                     </article>
                   ))
                 ) : (
                   <p className="rounded-xl border border-border/70 bg-background/62 p-3 text-sm text-muted">
-                    Pas de contributeur visible avec ces filtres.
+                    {t("Pas de contributeur visible avec ces filtres.", "لا يوجد مساهمون ظاهرون مع هذه الفلاتر.")}
                   </p>
                 )}
               </div>
@@ -585,13 +625,15 @@ export function AdminDashboardPage() {
           <article className="rounded-[1.6rem] border border-border/70 bg-surface/88 p-4 shadow-card sm:p-5">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">Activites admin</p>
+                <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
+                  {t("Activites admin", "الأنشطة الإدارية")}
+                </p>
                 <h3 className="mt-1 text-3xl leading-tight text-foreground sm:text-[2.7rem]">
-                  Suivi detaille des actions
+                  {t("Suivi detaille des actions", "متابعة تفصيلية للأنشطة")}
                 </h3>
               </div>
               <span className="inline-flex min-h-8 items-center rounded-full border border-border/70 bg-background/65 px-3 text-xs font-semibold text-muted-strong">
-                {filteredActivities.length} activite(s)
+                {filteredActivities.length} {t("activite(s)", "نشاط")}
               </span>
             </div>
 
@@ -599,13 +641,13 @@ export function AdminDashboardPage() {
               <table className="min-w-[58rem] w-full text-left">
                 <thead className="bg-background/68">
                   <tr className="text-[0.68rem] tracking-[0.1em] text-muted uppercase">
-                    <th className="px-3 py-2.5 font-semibold">Activite</th>
-                    <th className="px-3 py-2.5 font-semibold">Province</th>
-                    <th className="px-3 py-2.5 font-semibold">Expert</th>
-                    <th className="px-3 py-2.5 font-semibold">Date</th>
-                    <th className="px-3 py-2.5 font-semibold">Statut</th>
-                    <th className="px-3 py-2.5 font-semibold">Priorite</th>
-                    <th className="px-3 py-2.5 font-semibold">Progression</th>
+                    <th className="px-3 py-2.5 font-semibold">{t("Activite", "النشاط")}</th>
+                    <th className="px-3 py-2.5 font-semibold">{t("Province", "الإقليم")}</th>
+                    <th className="px-3 py-2.5 font-semibold">{t("Expert", "الخبير")}</th>
+                    <th className="px-3 py-2.5 font-semibold">{t("Date", "التاريخ")}</th>
+                    <th className="px-3 py-2.5 font-semibold">{t("Statut", "الحالة")}</th>
+                    <th className="px-3 py-2.5 font-semibold">{t("Priorite", "الأولوية")}</th>
+                    <th className="px-3 py-2.5 font-semibold">{t("Progression", "التقدم")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/70 bg-surface/82">
@@ -615,12 +657,14 @@ export function AdminDashboardPage() {
                         <td className="px-3 py-3">
                           <p className="text-sm font-semibold text-foreground">{activity.title}</p>
                           <p className="mt-0.5 text-xs text-muted">
-                            {activity.category} · {activity.participants} participants
+                            {activity.category} · {activity.participants} {t("participants", "مشارك")}
                           </p>
                         </td>
                         <td className="px-3 py-3 text-sm text-muted-strong">{activity.province}</td>
                         <td className="px-3 py-3 text-sm text-muted-strong">{activity.owner}</td>
-                        <td className="px-3 py-3 text-sm text-muted-strong">{formatDateLabel(activity.date)}</td>
+                        <td className="px-3 py-3 text-sm text-muted-strong">
+                          {formatDateLabel(activity.date, locale)}
+                        </td>
                         <td className="px-3 py-3">
                           <span
                             className={`inline-flex min-h-7 items-center rounded-full px-2.5 text-xs font-semibold ${statusBadgeClass(activity.status)}`}
@@ -653,7 +697,7 @@ export function AdminDashboardPage() {
                   ) : (
                     <tr>
                       <td className="px-3 py-6 text-sm text-muted" colSpan={7}>
-                        Aucun resultat pour les filtres selectionnes.
+                        {t("Aucun resultat pour les filtres selectionnes.", "لا توجد نتائج للفلاتر المحددة.")}
                       </td>
                     </tr>
                   )}

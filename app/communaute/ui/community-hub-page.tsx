@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { Locale, localizePath, stripLocaleFromPathname } from "../../lib/i18n";
 
 type WorkspaceGroup = {
   id: string;
@@ -358,29 +359,34 @@ function SendIcon() {
   );
 }
 
-export function CommunityHubPage() {
-  const [selectedProvince, setSelectedProvince] = useState("Toutes");
+export function CommunityHubPage({ locale = "fr" }: { locale?: Locale }) {
+  const t = (fr: string, ar: string) => (locale === "ar" ? ar : fr);
+  const allProvinceLabel = t("Toutes", "الكل");
+  const [selectedProvince, setSelectedProvince] = useState(allProvinceLabel);
   const [draft, setDraft] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [chatOpen, setChatOpen] = useState(false);
   const [activeChannel, setActiveChannel] = useState("accueil");
   const pathname = usePathname();
+  const normalizedPathname = stripLocaleFromPathname(pathname || "/");
   const messageIdRef = useRef(2);
   const logRef = useRef<HTMLUListElement | null>(null);
 
   const provinces = useMemo(
-    () => ["Toutes", ...new Set(workspaceGroups.map((group) => group.province))],
-    []
+    () => [allProvinceLabel, ...new Set(workspaceGroups.map((group) => group.province))],
+    [allProvinceLabel]
   );
 
   const filteredGroups = useMemo(() => {
-    if (selectedProvince === "Toutes") {
+    if (selectedProvince === allProvinceLabel) {
       return workspaceGroups;
     }
 
     return workspaceGroups.filter((group) => group.province === selectedProvince);
-  }, [selectedProvince]);
+  }, [selectedProvince, allProvinceLabel]);
+
+  const localHref = (href: string) => localizePath(href, locale);
 
   useEffect(() => {
     if (!logRef.current) {
@@ -438,13 +444,13 @@ export function CommunityHubPage() {
                 {workspaceShortcuts.map((shortcut) => {
                   const isActive =
                     shortcut.href === "/"
-                      ? pathname === "/"
-                      : pathname.startsWith(shortcut.href);
+                      ? normalizedPathname === "/"
+                      : normalizedPathname.startsWith(shortcut.href);
 
                   return (
                     <Link
                       key={shortcut.id}
-                      href={shortcut.href}
+                      href={localHref(shortcut.href)}
                       title={shortcut.title}
                       aria-label={shortcut.title}
                       className={`group relative inline-flex h-12 w-12 items-center justify-center rounded-2xl border transition-all hover:-translate-y-0.5 ${
@@ -530,15 +536,20 @@ export function CommunityHubPage() {
                 </div>
 
                 <div className="mt-auto rounded-xl border border-border/70 bg-surface p-3 dark:border-white/10 dark:bg-[#202535]">
-                  <p className="text-xs font-semibold text-foreground dark:text-white">Mode collaboratif</p>
+                  <p className="text-xs font-semibold text-foreground dark:text-white">
+                    {t("Mode collaboratif", "الوضع التعاوني")}
+                  </p>
                   <p className="mt-1 text-xs text-muted dark:text-white/65">
-                    Activez les salles voix et ateliers guides par province.
+                    {t(
+                      "Activez les salles voix et ateliers guides par province.",
+                      "فعّل غرف الصوت والورشات الموجهة حسب الإقليم.",
+                    )}
                   </p>
                   <button
                     type="button"
                     className="mt-3 inline-flex min-h-8 items-center justify-center rounded-lg bg-brand px-3 text-xs font-semibold text-brand-contrast transition-colors hover:bg-brand-700 dark:bg-[#5865f2] dark:hover:bg-[#707dff]"
                   >
-                    Activer
+                    {t("Activer", "تفعيل")}
                   </button>
                 </div>
               </aside>
@@ -548,17 +559,20 @@ export function CommunityHubPage() {
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="text-xs font-semibold tracking-[0.16em] text-muted uppercase dark:text-white/58">
-                        Communaute collaborative
+                        {t("Communaute collaborative", "مجتمع تعاوني")}
                       </p>
                       <h1 className="mt-1 text-2xl leading-tight text-foreground sm:text-[2.1rem] dark:text-white">
-                        Hub communautaire INDH: collaboration, mentorat et pilotage provincial.
+                        {t(
+                          "Hub communautaire INDH: collaboration, mentorat et pilotage provincial.",
+                          "منصة مجتمع INDH: تعاون، إرشاد ومواكبة على مستوى الأقاليم.",
+                        )}
                       </h1>
                     </div>
                     <Link
-                      href="/formation"
+                      href={localHref("/formation")}
                       className="inline-flex min-h-10 items-center rounded-full border border-border/70 bg-surface px-4 text-sm font-semibold text-foreground transition-colors hover:bg-surface-strong dark:border-white/16 dark:bg-white/10 dark:text-white/90 dark:hover:bg-white/14"
                     >
-                      Voir les formations
+                      {t("Voir les formations", "عرض التكوينات")}
                     </Link>
                   </div>
 
@@ -652,7 +666,7 @@ export function CommunityHubPage() {
 
               <aside className="hidden min-h-0 bg-surface-muted/65 p-4 xl:flex xl:flex-col dark:bg-[#141821]/84">
                 <p className="text-xs font-semibold tracking-[0.16em] text-muted uppercase dark:text-white/58">
-                  Mentors & Agenda
+                  {t("Mentors & Agenda", "الخبراء والبرنامج")}
                 </p>
                 <div className="mt-3 grid gap-2.5">
                   {mentors.map((mentor) => (
@@ -689,7 +703,7 @@ export function CommunityHubPage() {
 
                 <div className="mt-4 rounded-xl border border-border/70 bg-surface p-3 dark:border-white/12 dark:bg-white/6">
                   <p className="text-xs font-semibold tracking-[0.1em] text-muted uppercase dark:text-white/64">
-                    Evenements
+                    {t("Evenements", "الفعاليات")}
                   </p>
                   <div className="mt-2 grid gap-2">
                     {events.map((eventItem) => (
@@ -724,7 +738,7 @@ export function CommunityHubPage() {
         aria-controls="ai-chat-popup"
         className="fixed bottom-5 right-5 z-50 inline-flex min-h-12 items-center gap-2 rounded-full border border-brand/35 bg-brand px-4 text-sm font-semibold text-brand-contrast shadow-[0_12px_30px_color-mix(in_oklab,var(--brand)_45%,transparent)] transition-colors hover:bg-brand-700 dark:border-white/25 dark:bg-[#5865f2] dark:text-white dark:shadow-[0_12px_30px_rgba(88,101,242,0.45)] dark:hover:bg-[#6f7cff]"
       >
-        AI Chat
+        {t("AI Chat", "محادثة AI")}
       </button>
 
       <aside
@@ -736,13 +750,15 @@ export function CommunityHubPage() {
         <div className="flex items-center justify-between gap-2">
           <div>
             <p className="text-sm font-semibold text-foreground dark:text-white">AI Coach Communaute</p>
-            <p className="text-xs text-muted dark:text-white/62">Reponses rapides et actionnables</p>
+            <p className="text-xs text-muted dark:text-white/62">
+              {t("Reponses rapides et actionnables", "إجابات سريعة وقابلة للتنفيذ")}
+            </p>
           </div>
           <button
             type="button"
             onClick={() => setChatOpen(false)}
             className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border/70 bg-surface text-muted-strong transition-colors hover:bg-surface-strong dark:border-white/14 dark:bg-white/8 dark:text-white/82 dark:hover:bg-white/14"
-            aria-label="Fermer le chat"
+            aria-label={t("Fermer le chat", "إغلاق المحادثة")}
           >
             X
           </button>
@@ -783,27 +799,27 @@ export function CommunityHubPage() {
           ))}
           {isTyping && (
             <li className="rounded-lg border border-border/70 bg-surface px-2.5 py-2 text-sm text-muted dark:border-white/12 dark:bg-white/8 dark:text-white/70">
-              AI Coach est en train de repondre...
+              {t("AI Coach est en train de repondre...", "مدرب الذكاء الاصطناعي يكتب الرد...")}
             </li>
           )}
         </ul>
 
         <form onSubmit={onSubmit} className="mt-3">
           <label htmlFor="community-ai-input" className="sr-only">
-            Message pour AI Coach
+            {t("Message pour AI Coach", "رسالة إلى المدرب الذكي")}
           </label>
           <div className="flex items-center gap-2 rounded-lg border border-border/70 bg-background/72 p-2 dark:border-white/12 dark:bg-[#11141b]">
             <input
               id="community-ai-input"
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
-              placeholder="Pose ta question..."
+              placeholder={t("Pose ta question...", "اكتب سؤالك...")}
               className="h-9 flex-1 bg-transparent px-1 text-sm text-foreground outline-none placeholder:text-muted dark:text-white dark:placeholder:text-white/46"
             />
             <button
               type="submit"
               className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-brand text-brand-contrast transition-colors hover:bg-brand-700 dark:bg-[#5865f2] dark:text-white dark:hover:bg-[#707dff]"
-              aria-label="Envoyer"
+              aria-label={t("Envoyer", "إرسال")}
             >
               <SendIcon />
             </button>

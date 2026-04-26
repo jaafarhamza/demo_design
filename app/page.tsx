@@ -1,5 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
+import { localizePath } from "./lib/i18n";
+import { getRequestLocale, tr } from "./lib/request-locale";
 
 const trustItems = [
   "Video HD orientee terrain",
@@ -347,6 +350,18 @@ const provinceInsights = [
   { label: "Taux moyen", value: "86%" },
 ];
 
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  return {
+    title: tr(locale, "Accueil | INDH Digitale", "الرئيسية | INDH Digitale"),
+    description: tr(
+      locale,
+      "Plateforme INDH Digitale pour la formation, l'accompagnement et le suivi des projets.",
+      "منصة INDH Digitale للتكوين والمواكبة وتتبع المشاريع.",
+    ),
+  };
+}
+
 function SearchIcon() {
   return (
     <svg
@@ -383,7 +398,26 @@ function ArrowIcon() {
   );
 }
 
-export default function Home() {
+export default async function Home() {
+  const locale = await getRequestLocale();
+  const t = (fr: string, ar: string) => (locale === "ar" ? ar : fr);
+  const href = (path: string) => localizePath(path, locale);
+  const trustItemsLocalized =
+    locale === "ar"
+      ? ["فيديو HD موجه للميدان", "خبراء INDH متاحون", "تتبع مستمر للتقدم"]
+      : trustItems;
+  const topicChipsLocalized =
+    locale === "ar"
+      ? ["تركيب المشروع", "مخطط الأعمال", "تمويل INDH", "تسويق محلي"]
+      : topicChips;
+  const keyStatsLocalized =
+    locale === "ar"
+      ? [
+          { value: "120+", label: "وحدات موجهة" },
+          { value: "35", label: "خبراء معبؤون" },
+          { value: "24/7", label: "ولوج المنصة" },
+        ]
+      : keyStats;
   return (
     <main className="flex-1">
       <section className="px-3 pb-12 pt-6 sm:px-4 sm:pb-14 sm:pt-8 ">
@@ -394,33 +428,46 @@ export default function Home() {
             <div className="grid gap-4 xl:grid-cols-[1.04fr_0.96fr] xl:items-center xl:gap-6">
               <div className="relative space-y-7">
                 <div className="inline-flex items-center gap-2  px-4 text-sm font-semibold tracking-[0.14em] text-brand-emphasis uppercase">
-                  Plateforme de formation INDH
+                  {t("Plateforme de formation INDH", "منصة التكوين INDH")}
                 </div>
 
                 <div className="space-y-4">
-                  <h1 className="max-w-full text-[3rem] leading-[1.05] text-foreground md:text-[5rem] xl:text-[4rem] 2xl:text-[6rem]">
-                    Apprenez vite, structurez votre projet et avancez avec un
-                    encadrement expert.
+                  <h1 className="max-w-full text-[3rem] leading-[1.05] text-foreground md:text-[5rem] xl:text-[3.5rem] 2xl:text-[4rem]">
+                    <span className="bg-gradient-to-r from-brand-700 via-brand to-accent bg-clip-text text-transparent">
+                      {t("Apprenez vite,", "تعلّم بسرعة،")}
+                    </span>{" "}
+                    {t("structurez votre projet et avancez avec une", "هيكل مشروعك وتقدّم مع")}{" "}
+                    <span className="bg-gradient-to-r from-accent-700 via-accent to-brand-600 bg-clip-text text-transparent">
+                      {t("communaute engagee", "مجتمع ملتزم")}
+                    </span>{" "}
+                    {t("et un", "و")}{" "}
+                    <span className="bg-gradient-to-r from-brand-700 via-brand to-success bg-clip-text text-transparent">
+                      {t("encadrement expert", "تأطير خبير")}
+                    </span>
+                    .
                   </h1>
                   <p className="max-w-3xl text-[1.02rem] leading-7 text-muted-strong sm:text-[1.08rem]">
-                    INDH Digitale propose une experience de formation moderne,
-                    inspiree des meilleures plateformes e-learning, pour guider
-                    les porteurs de projets vers une execution claire, pratique
-                    et mesurable.
+                    {t(
+                      "INDH Digitale propose une experience de formation moderne, inspiree des meilleures plateformes e-learning, pour guider les porteurs de projets vers une execution claire, pratique et mesurable.",
+                      "تقدم INDH Digitale تجربة تكوين حديثة مستلهمة من أفضل منصات التعلم، لمرافقة حاملي المشاريع نحو تنفيذ واضح وعملي وقابل للقياس.",
+                    )}
                   </p>
                 </div>
 
                 <div className=" relative max-w-3xl rounded-[1.45rem] border-border/75 bg-surface/85 p-2.5">
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <label htmlFor="hero-search" className="sr-only">
-                      Rechercher une formation
+                      {t("Rechercher une formation", "البحث عن تكوين")}
                     </label>
                     <div className="flex min-h-12 flex-1 items-center gap-3 rounded-xl border border-border/70 bg-background/65 px-4 text-muted">
                       <SearchIcon />
                       <input
                         id="hero-search"
                         type="search"
-                        placeholder="Rechercher: business plan, financement, gestion..."
+                        placeholder={t(
+                          "Rechercher: business plan, financement, gestion...",
+                          "ابحث: مخطط الأعمال، التمويل، التدبير...",
+                        )}
                         className="w-full border-0 bg-transparent text-sm text-foreground placeholder:text-muted outline-none sm:text-[0.96rem]"
                       />
                     </div>
@@ -428,12 +475,12 @@ export default function Home() {
                       type="button"
                       className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand px-5 text-sm font-semibold text-brand-contrast transition-colors hover:bg-brand-700"
                     >
-                      Explorer
+                      {t("Explorer", "استكشاف")}
                       <ArrowIcon />
                     </button>
                   </div>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {topicChips.map((chip) => (
+                    {topicChipsLocalized.map((chip) => (
                       <span
                         key={chip}
                         className="inline-flex min-h-9 items-center rounded-full border border-border/65 bg-surface px-3 text-xs font-medium text-muted-strong sm:text-sm"
@@ -446,21 +493,21 @@ export default function Home() {
 
                 <div className="flex flex-wrap gap-3">
                   <Link
-                    href="/"
+                    href={href("/")}
                     className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-brand-contrast shadow-soft transition-colors hover:bg-brand-700"
                   >
-                    Commencer la formation
+                    {t("Commencer la formation", "ابدأ التكوين")}
                   </Link>
                   <Link
-                    href="/"
+                    href={href("/formation")}
                     className="inline-flex min-h-12 items-center justify-center rounded-full border border-border-strong/60 bg-surface px-5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-strong"
                   >
-                    Voir le parcours complet
+                    {t("Voir le parcours complet", "عرض المسار الكامل")}
                   </Link>
                 </div>
 
                 <ul className="grid gap-2.5 pt-1 sm:grid-cols-3">
-                  {trustItems.map((item) => (
+                  {trustItemsLocalized.map((item) => (
                     <li
                       key={item}
                       className="inline-flex min-h-11 items-center rounded-full border border-border/70 bg-background/55 px-4 text-sm text-muted-strong"
@@ -495,7 +542,7 @@ export default function Home() {
                 </div>
 
                 <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                  {keyStats.map((stat) => (
+                  {keyStatsLocalized.map((stat) => (
                     <article
                       key={stat.label}
                       className="rounded-2xl border border-border/70 bg-surface/92 px-4 py-3 backdrop-blur"
@@ -520,21 +567,23 @@ export default function Home() {
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs font-semibold tracking-[0.2em] text-muted uppercase">
-                Formations recommandees
+                {t("Formations recommandees", "تكوينات موصى بها")}
               </p>
               <h2 className="mt-1 text-3xl leading-tight text-foreground sm:text-[3.5rem]">
-                Une experience premium de formation.
+                {t("Une experience premium de formation.", "تجربة تكوين احترافية.")}
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-strong sm:text-[0.98rem]">
-                Contenus video, parcours progressifs et accompagnement expert pour passer de l&apos;idee a
-                l&apos;execution.
+                {t(
+                  "Contenus video, parcours progressifs et accompagnement expert pour passer de l'idee a l'execution.",
+                  "محتوى فيديو، مسارات تدريجية ومواكبة خبراء للانتقال من الفكرة إلى التنفيذ.",
+                )}
               </p>
             </div>
             <Link
-              href="/"
+              href={href("/formation")}
               className="inline-flex min-h-11 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-brand-contrast transition-colors hover:bg-brand-700"
             >
-              Voir toutes les formations
+              {t("Voir toutes les formations", "عرض كل التكوينات")}
             </Link>
           </div>
 
@@ -570,7 +619,7 @@ export default function Home() {
                   </span>
                 </div>
                 <Link
-                  href="/"
+                  href={href("/")}
                   className="mt-4 inline-flex min-h-10 items-center justify-center rounded-lg border border-white/35 bg-white/12 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/20"
                 >
                   Voir plus
@@ -612,7 +661,7 @@ export default function Home() {
                         {formation.duration}
                       </span>
                       <Link
-                        href="/"
+                        href={href("/")}
                         className="ml-auto inline-flex min-h-8 items-center justify-center rounded-md border border-border-strong/55 bg-surface px-3 text-xs font-semibold text-foreground transition-colors hover:bg-surface-strong"
                       >
                         Voir plus
@@ -628,7 +677,7 @@ export default function Home() {
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs font-semibold tracking-[0.16em] text-muted uppercase">Mentors en avance</p>
               <Link
-                href="/"
+                href={href("/")}
                 className="inline-flex min-h-9 items-center justify-center rounded-full border border-border-strong/55 px-3 text-xs font-semibold text-foreground transition-colors hover:bg-surface-strong"
               >
                 Voir plus d&apos;experts
@@ -676,7 +725,7 @@ export default function Home() {
                 </p>
               </div>
               <Link
-                href="/"
+                href={href("/")}
                 className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/35 bg-white/14 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/22"
               >
                 Voir toutes les communautes
@@ -717,7 +766,7 @@ export default function Home() {
                   </div>
 
                   <Link
-                    href="/"
+                    href={href("/")}
                     className="mt-4 inline-flex min-h-10 items-center justify-center rounded-lg border border-white/35 bg-white/14 px-4 text-sm font-semibold text-white transition-colors hover:bg-white/22"
                   >
                     Voir plus
@@ -755,7 +804,7 @@ export default function Home() {
                   </p>
                 </div>
                 <Link
-                  href="/"
+                  href={href("/")}
                   className="inline-flex min-h-11 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-brand-contrast transition-colors hover:bg-brand-700"
                 >
                   Voir plus
@@ -804,7 +853,7 @@ export default function Home() {
                       </div>
 
                       <Link
-                        href="/"
+                        href={href("/")}
                         className="inline-flex min-h-9 items-center justify-center rounded-md border border-border-strong/55 bg-surface px-3 text-xs font-semibold text-foreground transition-colors hover:bg-surface-strong"
                       >
                         Voir plus
@@ -847,7 +896,7 @@ export default function Home() {
                 </div>
 
                 <Link
-                  href="/"
+                  href={href("/")}
                   className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-full bg-brand px-4 text-sm font-semibold text-brand-contrast transition-colors hover:bg-brand-700"
                 >
                   Voir plus
@@ -860,3 +909,4 @@ export default function Home() {
     </main>
   );
 }
+

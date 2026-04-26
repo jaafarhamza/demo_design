@@ -3,6 +3,8 @@
 
 :root {
   color-scheme: light;
+  --site-max-width: 1440px;
+  --site-gutter: clamp(0.75rem, 1.5vw, 2rem);
   --background: oklch(0.98 0.012 118);
   --foreground: oklch(0.24 0.028 156);
   --surface: oklch(0.995 0.004 110);
@@ -234,4 +236,9 @@ body {
   .hero-float {
     animation: none;
   }
+}
+
+.mx-auto.max-w-full {
+  width: min(calc(100% - (var(--site-gutter) * 2)), var(--site-max-width));
+  max-width: var(--site-max-width);
 }

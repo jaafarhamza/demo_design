@@ -1,8 +1,10 @@
 "use client";
 
 import type { CSSProperties } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Locale, localizePath, stripLocaleFromPathname } from "../lib/i18n";
 
 const footerWordmarkVars = {
   "--footer-wordmark-size": "clamp(4.4rem, 15vw, 13rem)",
@@ -23,21 +25,62 @@ const footerWordmarkShadow = {
   top: "var(--footer-wordmark-shadow-offset)",
 } as CSSProperties;
 
-export function SiteFooter() {
-  const pathname = usePathname();
-  const isDarkShowcaseRoute = pathname.startsWith("/indh-tv");
-
-  const copy = {
+const copyByLocale: Record<
+  Locale,
+  {
+    description: string;
+    navigation: string;
+    designed: string;
+    location: string;
+    home: string;
+    links: Array<{ href: string; label: string }>;
+  }
+> = {
+  fr: {
     description:
       "Une experience numerique moderne pour orienter, former et accompagner les porteurs de projets INDH avec un parcours clair, accessible et responsive.",
     navigation: "Navigation",
     designed:
       "© 2026 INDH Digitale. Concu pour une presentation moderne, accessible et evolutive.",
     location: "Maroc · FR",
-  };
+    home: "Accueil",
+    links: [
+      { href: "/", label: "Accueil" },
+      { href: "/formation", label: "Formations" },
+      { href: "/dashboard", label: "Dashboard" },
+      { href: "/province", label: "Provinces" },
+      { href: "/indh-tv", label: "INDH TV" },
+      { href: "/communaute", label: "Communaute" },
+    ],
+  },
+  ar: {
+    description:
+      "تجربة رقمية حديثة لتوجيه وتكوين ومواكبة حاملي المشاريع ضمن منصة واضحة وسهلة الاستخدام ومتجاوبة.",
+    navigation: "التنقل",
+    designed: "© 2026 INDH Digitale. صُممت المنصة لعرض حديث وقابل للتطوير.",
+    location: "المغرب · AR",
+    home: "الرئيسية",
+    links: [
+      { href: "/", label: "الرئيسية" },
+      { href: "/formation", label: "التكوينات" },
+      { href: "/dashboard", label: "لوحة القيادة" },
+      { href: "/province", label: "الأقاليم" },
+      { href: "/indh-tv", label: "INDH TV" },
+      { href: "/communaute", label: "المجتمع" },
+    ],
+  },
+};
+
+export function SiteFooter({ locale }: { locale: Locale }) {
+  const pathname = usePathname();
+  const normalizedPathname = stripLocaleFromPathname(pathname || "/");
+  const isDarkShowcaseRoute = normalizedPathname.startsWith("/indh-tv");
+  const copy = copyByLocale[locale];
+  const localizedHref = (href: string) => localizePath(href, locale);
 
   return (
     <footer
+      dir="ltr"
       className={`px-3 pb-0 pt-10 sm:px-4 sm:pt-12 lg:px-6 lg:pt-16 ${
         isDarkShowcaseRoute ? "dark bg-[oklch(0.1_0.015_210)]" : ""
       }`}
@@ -68,14 +111,17 @@ export function SiteFooter() {
             }`}
           />
 
-          <div className="grid gap-8 px-5 py-6 sm:px-6 sm:py-8 lg:grid-cols-[1.3fr_0.8fr_0.8fr_0.9fr] lg:gap-10 lg:px-8 lg:py-10">
+          <div className="grid gap-8 px-5 py-6 sm:px-6 sm:py-8 lg:grid-cols-[1.35fr_0.95fr] lg:gap-8 lg:px-8 lg:py-9">
             <section className="relative space-y-6">
               <div className="inline-flex items-center gap-4">
-                <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[1.2rem] bg-gradient-to-br from-brand via-brand-600 to-accent text-brand-contrast shadow-soft sm:h-15 sm:w-15">
-                  <span className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,0.32),transparent_48%)]" />
-                  <span className="relative font-display text-sm tracking-[0.12em] sm:text-[0.95rem]">
-                    INDH
-                  </span>
+                <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-[1.2rem] border border-border/70 bg-white shadow-soft sm:h-15 sm:w-15">
+                  <Image
+                    src="/INDH logo.png"
+                    alt="Logo INDH Digitale"
+                    fill
+                    sizes="60px"
+                    className="object-cover"
+                  />
                 </span>
                 <div>
                   <p className="font-display text-[1.75rem] leading-none text-foreground sm:text-[1.95rem]">
@@ -93,10 +139,10 @@ export function SiteFooter() {
 
               <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
                 <Link
-                  href="/"
+                  href={localizedHref("/")}
                   className="inline-flex min-h-12 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-brand-contrast shadow-soft transition-colors hover:bg-brand-700 sm:justify-start"
                 >
-                  Accueil
+                  {copy.home}
                 </Link>
               </div>
             </section>
@@ -109,67 +155,19 @@ export function SiteFooter() {
                 {copy.navigation}
               </h2>
               <ul className="mt-4 grid gap-2">
-                <li>
-                  <Link
-                    href="/"
-                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
-                  >
-                    Accueil
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/formation"
-                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
-                  >
-                    Formations
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/dashboard"
-                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
-                  >
-                    Dashboard
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/benchmark"
-                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
-                  >
-                    Benchmark
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/province"
-                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
-                  >
-                    Provinces
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/indh-tv"
-                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
-                  >
-                    INDH TV
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/communaute"
-                    className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
-                  >
-                    Communaute
-                  </Link>
-                </li>
+                {copy.links.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={localizedHref(item.href)}
+                      className="inline-flex min-h-12 items-center rounded-2xl px-3 text-sm text-muted-strong transition-colors hover:bg-surface-strong hover:text-foreground"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </nav>
 
-            <div className="hidden lg:block" />
-            <div className="hidden lg:block" />
           </div>
 
           <div className="relative flex flex-col gap-4 border-t border-border/70 px-5 py-4 text-sm text-muted sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">

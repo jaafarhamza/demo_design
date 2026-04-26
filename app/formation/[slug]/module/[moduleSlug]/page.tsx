@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { localizePath } from "../../../../lib/i18n";
+import { getRequestLocale, tr } from "../../../../lib/request-locale";
 import {
   formationExperts,
   learningPaths,
@@ -29,17 +31,22 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const locale = await getRequestLocale();
   const { slug, moduleSlug } = await params;
   const path = learningPaths.find((item) => item.slug === slug);
   const selectedModule = modules.find((item) => item.slug === moduleSlug);
 
   if (!path || !selectedModule || selectedModule.category !== path.category) {
-    return { title: "Module introuvable | INDH Digitale" };
+    return { title: tr(locale, "Module introuvable | INDH Digitale", "وحدة غير موجودة | INDH Digitale") };
   }
 
   return {
     title: `${selectedModule.title} | ${path.title} | INDH Digitale`,
-    description: `Module ${selectedModule.title} avec progression et quiz par etape.`,
+    description: tr(
+      locale,
+      `Module ${selectedModule.title} avec progression et quiz par etape.`,
+      `وحدة ${selectedModule.title} مع تقدم واختبار في كل مرحلة.`,
+    ),
   };
 }
 
@@ -53,6 +60,9 @@ function Stars({ rating }: { rating: number }) {
 }
 
 export default async function ModuleDetailPage({ params }: PageProps) {
+  const locale = await getRequestLocale();
+  const t = (fr: string, ar: string) => (locale === "ar" ? ar : fr);
+  const href = (pathValue: string) => localizePath(pathValue, locale);
   const { slug, moduleSlug } = await params;
 
   const path = learningPaths.find((item) => item.slug === slug);
@@ -88,15 +98,15 @@ export default async function ModuleDetailPage({ params }: PageProps) {
               <div className="pointer-events-none absolute -right-20 bottom-0 h-56 w-56 rounded-full bg-accent/30 blur-3xl" />
 
               <nav aria-label="Fil d'Ariane" className="flex flex-wrap items-center gap-2 text-xs text-white/78">
-                <Link href="/" className="underline-offset-4 hover:underline">
-                  Accueil
+                <Link href={href("/")} className="underline-offset-4 hover:underline">
+                  {t("Accueil", "الرئيسية")}
                 </Link>
                 <span>/</span>
-                <Link href="/formation" className="underline-offset-4 hover:underline">
-                  Formations
+                <Link href={href("/formation")} className="underline-offset-4 hover:underline">
+                  {t("Formations", "التكوينات")}
                 </Link>
                 <span>/</span>
-                <Link href={`/formation/${path.slug}`} className="underline-offset-4 hover:underline">
+                <Link href={href(`/formation/${path.slug}`)} className="underline-offset-4 hover:underline">
                   {path.title}
                 </Link>
                 <span>/</span>
@@ -143,13 +153,13 @@ export default async function ModuleDetailPage({ params }: PageProps) {
                   type="button"
                   className="inline-flex min-h-11 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-brand-900 transition-colors hover:bg-white/90"
                 >
-                  Demarrer le module
+                  {t("Demarrer le module", "بدء الوحدة")}
                 </button>
                 <Link
-                  href={`/formation/${path.slug}`}
+                  href={href(`/formation/${path.slug}`)}
                   className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/35 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/16"
                 >
-                  Retour au cours
+                  {t("Retour au cours", "العودة إلى التكوين")}
                 </Link>
               </div>
             </article>

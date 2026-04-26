@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { localizePath } from "../lib/i18n";
+import { getRequestLocale, tr } from "../lib/request-locale";
 import {
   catalogueCategories,
   learningPaths,
@@ -9,13 +11,22 @@ import {
   testimonials,
 } from "./formation-data";
 
-export const metadata: Metadata = {
-  title: "Formations | INDH Digitale",
-  description:
-    "Catalogue de formations INDH Digitale: parcours, modules pratiques, roadmap d'apprentissage et accompagnement expert.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  return {
+    title: tr(locale, "Formations | INDH Digitale", "التكوينات | INDH Digitale"),
+    description: tr(
+      locale,
+      "Catalogue de formations INDH Digitale: parcours, modules pratiques, roadmap d'apprentissage et accompagnement expert.",
+      "كتالوج تكوينات INDH Digitale: مسارات، وحدات تطبيقية، وخارطة تعلم بمواكبة الخبراء.",
+    ),
+  };
+}
 
-export default function FormationPage() {
+export default async function FormationPage() {
+  const locale = await getRequestLocale();
+  const t = (fr: string, ar: string) => (locale === "ar" ? ar : fr);
+  const href = (path: string) => localizePath(path, locale);
   return (
     <main className="flex-1">
       <section className="px-3 pb-12 pt-6 sm:px-4 sm:pb-14 sm:pt-8 lg:px-6 lg:pb-16 lg:pt-10">
@@ -27,14 +38,19 @@ export default function FormationPage() {
             <div className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr] xl:items-end">
               <div>
                 <p className="inline-flex min-h-9 items-center rounded-full border border-white/30 bg-white/10 px-4 text-xs font-semibold tracking-[0.16em] text-white/85 uppercase">
-                  Espace Formation
+                  {t("Espace Formation", "فضاء التكوين")}
                 </p>
                 <h1 className="mt-4 text-[2rem] leading-[1.03] text-white sm:text-[2.9rem] lg:text-[3.6rem]">
-                  Formez-vous comme sur une vraie plateforme e-learning professionnelle.
+                  {t(
+                    "Formez-vous comme sur une vraie plateforme e-learning professionnelle.",
+                    "تعلّم كما في منصة تعليم احترافية حقيقية.",
+                  )}
                 </h1>
                 <p className="mt-3 max-w-2xl text-sm leading-7 text-white/82 sm:text-[1.02rem]">
-                  Programmes guides, progression par module, sessions live et ressources pratiques pour
-                  convertir vos objectifs en resultats mesurables.
+                  {t(
+                    "Programmes guides, progression par module, sessions live et ressources pratiques pour convertir vos objectifs en resultats mesurables.",
+                    "برامج موجهة، تقدم حسب الوحدات، حصص مباشرة وموارد عملية لتحويل أهدافك إلى نتائج قابلة للقياس.",
+                  )}
                 </p>
 
                 <div className="mt-5 flex flex-wrap gap-3">
@@ -42,25 +58,28 @@ export default function FormationPage() {
                     href="#catalogue-formations"
                     className="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-brand-900 transition-colors hover:bg-white/90"
                   >
-                    Explorer le catalogue
+                    {t("Explorer le catalogue", "استكشاف الكتالوج")}
                   </Link>
                   <Link
-                    href="/"
+                    href={href("/")}
                     className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/35 bg-white/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/16"
                   >
-                    Retour a l&apos;accueil
+                    {t("Retour a l'accueil", "العودة إلى الرئيسية")}
                   </Link>
                 </div>
               </div>
 
               <div className="rounded-[1.45rem] border border-white/20 bg-black/24 p-3 backdrop-blur-sm">
                 <label htmlFor="formation-search" className="sr-only">
-                  Rechercher une formation
+                  {t("Rechercher une formation", "البحث عن تكوين")}
                 </label>
                 <input
                   id="formation-search"
                   type="search"
-                  placeholder="Rechercher: business plan, financement, pilotage..."
+                  placeholder={t(
+                    "Rechercher: business plan, financement, pilotage...",
+                    "ابحث: مخطط الأعمال، التمويل، القيادة...",
+                  )}
                   className="w-full rounded-xl border border-white/20 bg-white/12 px-4 py-3 text-sm text-white placeholder:text-white/65 outline-none"
                 />
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -74,7 +93,10 @@ export default function FormationPage() {
                   ))}
                 </div>
                 <p className="mt-3 text-xs text-white/76">
-                  120+ modules disponibles, acces web et mobile, progression sauvegardee.
+                  {t(
+                    "120+ modules disponibles, acces web et mobile, progression sauvegardee.",
+                    "+120 وحدة متاحة، عبر الويب والهاتف، مع حفظ التقدم.",
+                  )}
                 </p>
               </div>
             </div>
@@ -88,14 +110,14 @@ export default function FormationPage() {
             <div>
               <p className="text-xs font-semibold tracking-[0.2em] text-muted uppercase">Parcours a la une</p>
               <h2 className="mt-1 text-3xl leading-tight text-foreground sm:text-[3.2rem]">
-                Decouvrez les parcours en slides.
+                {t("Decouvrez les parcours en slides.", "اكتشف المسارات عبر الشرائح.")}
               </h2>
             </div>
             <Link
               href="#catalogue-formations"
               className="inline-flex min-h-11 items-center justify-center rounded-full bg-brand px-5 text-sm font-semibold text-brand-contrast transition-colors hover:bg-brand-700"
             >
-              Voir plus
+              {t("Voir plus", "عرض المزيد")}
             </Link>
           </div>
 
@@ -135,10 +157,10 @@ export default function FormationPage() {
                     </span>
                   </div>
                   <Link
-                    href={`/formation/${path.slug}`}
+                    href={href(`/formation/${path.slug}`)}
                     className="mt-4 inline-flex min-h-10 items-center justify-center rounded-lg border border-border-strong/55 bg-surface px-4 text-sm font-semibold text-foreground transition-colors hover:bg-surface-strong"
                   >
-                    Voir plus
+                    {t("Voir plus", "عرض المزيد")}
                   </Link>
                 </div>
               </article>
@@ -153,10 +175,13 @@ export default function FormationPage() {
             <div>
               <p className="text-xs font-semibold tracking-[0.2em] text-muted uppercase">Catalogue modules</p>
               <h2 className="mt-1 text-3xl leading-tight text-foreground sm:text-[3rem]">
-                Catalogue separe en 3 categories claires.
+                {t("Catalogue separe en 3 categories claires.", "كتالوج مقسم إلى 3 فئات واضحة.")}
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-strong sm:text-[0.98rem]">
-                Choisissez votre categorie selon votre maturite projet: fondamentaux, financement ou pilotage.
+                {t(
+                  "Choisissez votre categorie selon votre maturite projet: fondamentaux, financement ou pilotage.",
+                  "اختر الفئة حسب نضج مشروعك: الأساسيات، التمويل، أو القيادة.",
+                )}
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -235,10 +260,10 @@ export default function FormationPage() {
                   </div>
 
                   <Link
-                    href={`/formation/${category.defaultPathSlug}`}
+                    href={href(`/formation/${category.defaultPathSlug}`)}
                     className="mt-3 inline-flex min-h-10 items-center justify-center rounded-lg border border-border-strong/55 bg-surface px-4 text-sm font-semibold text-foreground transition-colors hover:bg-surface-strong"
                   >
-                    Voir plus
+                    {t("Voir plus", "عرض المزيد")}
                   </Link>
                 </details>
               );
@@ -304,10 +329,10 @@ export default function FormationPage() {
                   </div>
 
                   <Link
-                    href={`/formation/${category.defaultPathSlug}`}
+                    href={href(`/formation/${category.defaultPathSlug}`)}
                     className="mt-4 inline-flex min-h-10 items-center justify-center rounded-lg border border-border-strong/55 bg-surface px-4 text-sm font-semibold text-foreground transition-colors hover:bg-surface-strong"
                   >
-                    Voir plus
+                    {t("Voir plus", "عرض المزيد")}
                   </Link>
                 </article>
               );

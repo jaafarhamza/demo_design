@@ -1,30 +1,74 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { Locale, localizePath, stripLocaleFromPathname } from "../lib/i18n";
 import { ThemeToggle } from "./theme-toggle";
 
 type ThemePreference = "light" | "dark";
 
+const copyByLocale: Record<
+  Locale,
+  {
+    openMenu: string;
+    closeMenu: string;
+    primaryNavigation: string;
+    mobileNavigation: string;
+    languageLabel: string;
+    navigation: Array<{ href: string; label: string }>;
+  }
+> = {
+  fr: {
+    openMenu: "Ouvrir la navigation",
+    closeMenu: "Fermer la navigation",
+    primaryNavigation: "Navigation principale",
+    mobileNavigation: "Navigation mobile",
+    languageLabel: "Langue",
+    navigation: [
+      { href: "/", label: "Accueil" },
+      { href: "/formation", label: "Formations" },
+      { href: "/province", label: "Provinces" },
+      { href: "/communaute", label: "Communauté" },
+      { href: "/indh-tv", label: "INDH TV" },
+      { href: "/dashboard", label: "Dashboard" },
+    ],
+  },
+  ar: {
+    openMenu: "فتح القائمة",
+    closeMenu: "إغلاق القائمة",
+    primaryNavigation: "التنقل الرئيسي",
+    mobileNavigation: "تنقل الهاتف",
+    languageLabel: "اللغة",
+    navigation: [
+      { href: "/", label: "الرئيسية" },
+      { href: "/formation", label: "التكوينات" },
+      { href: "/province", label: "الأقاليم" },
+      { href: "/communaute", label: "المجتمع" },
+      { href: "/indh-tv", label: "INDH TV" },
+      { href: "/dashboard", label: "لوحة القيادة" },
+    ],
+  },
+};
+
 export function SiteHeader({
   initialTheme,
+  locale,
 }: {
   initialTheme: ThemePreference;
+  locale: Locale;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
   const pathname = usePathname();
-  const isDarkShowcaseRoute = pathname.startsWith("/indh-tv");
-  const navigation = [
-    { href: "/", label: "Accueil" },
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/benchmark", label: "Benchmark" },
-    { href: "/formation", label: "Formations" },
-    { href: "/province", label: "Provinces" },
-    { href: "/indh-tv", label: "INDH TV" },
-    { href: "/communaute", label: "Communauté" },
-  ];
+  const normalizedPathname = stripLocaleFromPathname(pathname || "/");
+  const isDarkShowcaseRoute = normalizedPathname.startsWith("/indh-tv");
+  const copy = copyByLocale[locale];
+
+  const getLocalizedHref = (href: string) => localizePath(href, locale);
+  const currentPathFr = localizePath(normalizedPathname, "fr");
+  const currentPathAr = localizePath(normalizedPathname, "ar");
 
   useEffect(() => {
     if (!isOpen) {
@@ -75,10 +119,9 @@ export function SiteHeader({
   return (
     <header
       ref={headerRef}
+      dir="ltr"
       className={`sticky top-0 z-50 px-3 pt-3 sm:px-4 lg:px-6 ${
-        isDarkShowcaseRoute
-          ? "bg-black"
-          : ""
+        isDarkShowcaseRoute ? "bg-black" : ""
       }`}
     >
       <div className="mx-auto max-w-full">
@@ -98,41 +141,29 @@ export function SiteHeader({
           />
           <div className="flex min-h-15 items-center justify-between gap-2 px-3 py-2.5 sm:min-h-16 sm:px-4 lg:px-5">
             <Link
-              href="/"
-              className="group inline-flex min-h-12 min-w-0 items-center gap-3 rounded-full transition-transform hover:scale-[1.01] focus-visible:outline-none"
+              href={getLocalizedHref("/")}
+              className="group inline-flex min-h-12 min-w-0 self-stretch items-center rounded-full transition-transform hover:scale-[1.01] focus-visible:outline-none"
             >
-              <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-[0.95rem] bg-gradient-to-br from-brand via-brand-600 to-accent text-brand-contrast shadow-soft sm:h-10 sm:w-10 lg:h-11 lg:w-11 lg:rounded-[1.1rem]">
-                <span className="absolute inset-0 bg-danger" />
-                <span className="relative text-success font-bold font-display text-[0.7rem] tracking-[0.08em] sm:text-[0.78rem] lg:text-sm">
-                  INDH
-                </span>
-              </span>
-              <span className="min-w-0">
-                <span
-                  className={`block truncate font-display text-[0.95rem] leading-none sm:text-lg lg:text-xl ${
-                    isDarkShowcaseRoute ? "text-white" : "text-foreground"
-                  }`}
-                >
-                  INDH Digitale
-                </span>
-                <span
-                  className={`mt-1 hidden text-sm leading-none xl:block ${
-                    isDarkShowcaseRoute ? "text-white/72" : "text-muted"
-                  }`}
-                >
-                  Formation, accompagnement et suivi des projets
-                </span>
+              <span className="relative flex h-full w-[4.5rem] shrink-0 items-center justify-center sm:w-[5rem] lg:w-[6rem]">
+                <Image
+                  src="/INDH logo.png"
+                  alt="Logo INDH Digitale"
+                  fill
+                  sizes="(min-width: 1024px) 100px, (min-width: 640px) 100px, 100px"
+                  className="object-cover scale-[1.25]"
+                  priority
+                />
               </span>
             </Link>
 
             <nav
-              aria-label="Navigation principale"
+              aria-label={copy.primaryNavigation}
               className="hidden lg:flex lg:items-center lg:gap-0.5 xl:gap-1"
             >
-              {navigation.map((item) => (
+              {copy.navigation.map((item) => (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={getLocalizedHref(item.href)}
                   className={`inline-flex items-center rounded-full px-3 py-2 text-[0.92rem] font-medium transition-colors xl:min-h-12 xl:px-4 xl:text-sm ${
                     isDarkShowcaseRoute
                       ? "text-white/85 hover:bg-white/10 hover:text-white"
@@ -144,19 +175,55 @@ export function SiteHeader({
               ))}
             </nav>
 
-            {!isDarkShowcaseRoute && (
-              <div className="hidden items-center gap-2.5 lg:flex xl:gap-3">
-                <ThemeToggle initialTheme={initialTheme} />
+            <div className="hidden items-center gap-2.5 lg:flex xl:gap-3">
+              <span className="sr-only">{copy.languageLabel}</span>
+              <div
+                className={`inline-flex items-center rounded-full border p-1 ${
+                  isDarkShowcaseRoute
+                    ? "border-white/20 bg-white/10"
+                    : "border-border/70 bg-background"
+                }`}
+              >
+                <a
+                  href={currentPathFr}
+                  className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                    locale === "fr"
+                      ? "bg-brand text-brand-contrast"
+                      : isDarkShowcaseRoute
+                        ? "text-white/80 hover:bg-white/12 hover:text-white"
+                        : "text-muted hover:bg-surface-strong hover:text-foreground"
+                  }`}
+                >
+                  FR
+                </a>
+                <a
+                  href={currentPathAr}
+                  className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                    locale === "ar"
+                      ? "bg-brand text-brand-contrast"
+                      : isDarkShowcaseRoute
+                        ? "text-white/80 hover:bg-white/12 hover:text-white"
+                        : "text-muted hover:bg-surface-strong hover:text-foreground"
+                  }`}
+                >
+                  AR
+                </a>
               </div>
-            )}
+
+              {!isDarkShowcaseRoute && (
+                <ThemeToggle initialTheme={initialTheme} />
+              )}
+            </div>
 
             <div className="flex shrink-0 items-center gap-2 lg:hidden">
-              {!isDarkShowcaseRoute && <ThemeToggle initialTheme={initialTheme} />}
+              {!isDarkShowcaseRoute && (
+                <ThemeToggle initialTheme={initialTheme} />
+              )}
               <button
                 type="button"
                 aria-expanded={isOpen}
                 aria-controls="mobile-navigation"
-                aria-label={isOpen ? "Fermer la navigation" : "Ouvrir la navigation"}
+                aria-label={isOpen ? copy.closeMenu : copy.openMenu}
                 onClick={() => setIsOpen((open) => !open)}
                 className={`inline-flex h-10 w-10 items-center justify-center rounded-full border transition-colors ${
                   isDarkShowcaseRoute
@@ -165,7 +232,7 @@ export function SiteHeader({
                 }`}
               >
                 <span className="sr-only">
-                  {isOpen ? "Fermer la navigation" : "Ouvrir la navigation"}
+                  {isOpen ? copy.closeMenu : copy.openMenu}
                 </span>
                 <span className="relative h-4 w-5">
                   <span
@@ -191,7 +258,7 @@ export function SiteHeader({
           <div
             className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-out lg:hidden ${
               isOpen
-                ? "pointer-events-auto max-h-[28rem] opacity-100"
+                ? "pointer-events-auto max-h-[32rem] opacity-100"
                 : "pointer-events-none max-h-0 opacity-0"
             }`}
           >
@@ -203,11 +270,35 @@ export function SiteHeader({
               }`}
               id="mobile-navigation"
             >
-              <nav aria-label="Navigation mobile" className="grid gap-1">
-                {navigation.map((item) => (
+              <div className="mb-3 inline-flex items-center rounded-full border border-border/70 bg-background p-1">
+                <a
+                  href={currentPathFr}
+                  onClick={() => setIsOpen(false)}
+                  className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                    locale === "fr"
+                      ? "bg-brand text-brand-contrast"
+                      : "text-muted hover:bg-surface-strong hover:text-foreground"
+                  }`}
+                >
+                  FR
+                </a>
+                <a
+                  href={currentPathAr}
+                  onClick={() => setIsOpen(false)}
+                  className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                    locale === "ar"
+                      ? "bg-brand text-brand-contrast"
+                      : "text-muted hover:bg-surface-strong hover:text-foreground"
+                  }`}
+                >
+                  AR
+                </a>
+              </div>
+              <nav aria-label={copy.mobileNavigation} className="grid gap-1">
+                {copy.navigation.map((item) => (
                   <Link
                     key={item.href}
-                    href={item.href}
+                    href={getLocalizedHref(item.href)}
                     onClick={() => setIsOpen(false)}
                     className={`flex min-h-12 items-center rounded-2xl px-4 text-base font-medium transition-colors ${
                       isDarkShowcaseRoute
